@@ -55,7 +55,31 @@ window.CS_CONFIG = {
       title: "PoC migration across software versions and the supply chain",
       desc: "Adapting existing PoCs to validate vulnerabilities in other versions and downstream products.",
     },
+    // —— 以下为开放研究方向（status: "open"），页面上标注 “Open direction · collaboration welcome”
+    {
+      tag: "Trust", status: "open",
+      title: "Trustworthy PoCs: detecting fake and malicious proof-of-concepts",
+      desc: "Separating genuine PoCs from fake, broken or backdoored ones before they are reused.",
+    },
+    {
+      tag: "Validation", status: "open",
+      title: "Automated PoC validation with reproducible environments",
+      desc: "Building vulnerable environments and replaying PoCs automatically to confirm they work.",
+    },
+    {
+      tag: "Oracle", status: "open",
+      title: "Synthesizing verification oracles",
+      desc: "Inferring observable success signals (crashes, errors, privilege changes) for PoCs that lack them.",
+    },
+    {
+      tag: "Patching", status: "open",
+      title: "PoC-driven affected-version confirmation and patch-completeness checking",
+      desc: "Using completed PoCs to pin down true affected ranges and to catch incomplete or mis-backported fixes.",
+    },
   ],
+
+  // 参与方式
+  issuesUrl: "https://github.com/dangwenjing/Cybersploit/issues",
 
   // 与现有数据集的对比（其他数据集的信息请核实；值：yes / no / part / 文本）
   compareAsOf: "November 2026",

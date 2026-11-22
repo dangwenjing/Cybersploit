@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611222021">
+  <link rel="stylesheet" href="assets/style.css?v=202611222023">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -19,10 +19,11 @@
     <ul>
       <li><a href="#contributions">Contributions</a></li>
       <li><a href="#compare">Comparison</a></li>
-      <li><a href="#pipeline">Methodology</a></li>
+      <li class="opt"><a href="#pipeline">Methodology</a></li>
       <li><a href="#statistics">Statistics</a></li>
-      <li><a href="#impact">Impact</a></li>
+      <li class="opt"><a href="#impact">Impact</a></li>
       <li><a href="#publications">Publications</a></li>
+      <li><a href="#involved">Get involved</a></li>
       <li><a href="search.html">Search</a></li>
     </ul>
     <span class="spacer"></span>
@@ -282,8 +283,40 @@
         <p class="lead">If you use CyberSploit, please cite the corresponding papers. Full list on <a id="orcid" href="#" target="_blank" rel="noopener">ORCID</a>.</p>
       </div>
       <div class="card pubs" id="pubs"></div>
-      <h3 style="margin:32px 0 12px">Ongoing work</h3>
+      <h3 style="margin:32px 0 12px">Ongoing work &amp; research directions</h3>
       <div class="card pubs" id="ongoing"></div>
+    </div>
+  </section>
+
+  <!-- ============ GET INVOLVED ============ -->
+  <section id="involved">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Get involved</p>
+        <h2>Actively maintained — and open to the community</h2>
+        <p class="lead">CyberSploit is continuously updated with new PoCs and new sources, and its aspects, links and statistics are refreshed with every release. We welcome feedback, research collaboration and new PoC contributions.</p>
+      </div>
+      <div class="involve">
+        <div class="card">
+          <div class="ik">FEEDBACK</div>
+          <h3>Suggestions &amp; issues</h3>
+          <p>Found a wrong link, a missing source, or have an idea for the dataset or the website? Tell us.</p>
+          <div class="ia"><a class="btn" data-issues href="#" target="_blank" rel="noopener">Open a GitHub issue</a><a class="btn" data-mailto href="#">Email us</a></div>
+        </div>
+        <div class="card">
+          <div class="ik">COLLABORATION</div>
+          <h3>Research collaboration</h3>
+          <p>We are happy to collaborate on PoC linking, completion, validation, migration, trustworthiness, and LLM-based vulnerability analysis built on CyberSploit.</p>
+          <div class="ia"><a class="btn" data-mailto-collab href="#">Propose a collaboration</a></div>
+        </div>
+        <div class="card accent">
+          <div class="ik">CONTRIBUTE</div>
+          <h3>Submit a PoC</h3>
+          <p>Share new or improved PoCs — ideally with the CVE ID, affected version, environment, trigger steps and expected result. Submissions are reviewed before inclusion and credited to their authors.</p>
+          <p class="fine">Please submit PoCs by email rather than public issues. For vulnerabilities that are not yet fixed, follow coordinated disclosure with the vendor first.</p>
+          <div class="ia"><a class="btn primary" data-mailto-submit href="#">Submit by email</a></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -328,10 +361,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611222021"></script>
-<script src="assets/common.js?v=202611222021"></script>
-<script src="assets/charts.js?v=202611222021"></script>
-<script src="data/stats.js?v=202611222021"></script>
+<script src="assets/config.js?v=202611222023"></script>
+<script src="assets/common.js?v=202611222023"></script>
+<script src="assets/charts.js?v=202611222023"></script>
+<script src="data/stats.js?v=202611222023"></script>
 <script>
   // 首屏数字随导出的数据版本自动更新
   (function () {
@@ -404,10 +437,19 @@
         '</div><div class="a">' + CS.esc(p.authors) + '</div><div class="s">' + CS.esc(p.venue) + doi + "</div></div></div>";
     }).join("");
     document.getElementById("ongoing").innerHTML = C.ongoing.map(function (p) {
+      var st = p.status === "open" ? '<span class="st open">Open direction · collaboration welcome</span>' : '<span class="st prog">In progress</span>';
       return '<div class="pub"><div class="venue">' + CS.esc(p.tag) + '</div><div><div class="t">' + CS.esc(p.title) +
-        '</div><div class="a">' + CS.esc(p.desc) + '</div><div class="s">In progress</div></div></div>';
+        '</div><div class="a">' + CS.esc(p.desc) + '</div><div class="s">' + st + "</div></div></div>";
     }).join("");
     document.getElementById("orcid").href = C.orcid;
+    document.querySelectorAll("[data-issues]").forEach(function (a) { a.href = C.issuesUrl; });
+    document.querySelectorAll("[data-mailto-collab]").forEach(function (a) {
+      a.href = CS.mailto("CyberSploit: research collaboration", "Name:\nAffiliation:\nTopic / idea:\n");
+    });
+    document.querySelectorAll("[data-mailto-submit]").forEach(function (a) {
+      a.href = CS.mailto("CyberSploit: PoC submission",
+        "CVE ID (if any):\nAffected software and version:\nTest platform / environment:\nTrigger steps:\nExpected result (how to tell it worked):\nReferences:\nIs the vulnerability already fixed / publicly disclosed? (yes/no)\n\nPlease attach the PoC code or files.");
+    });
   })();
 </script>
 </body>

@@ -28,6 +28,14 @@
 
 The website provides aspect-level search and basic metadata. Full records (PoC code, trigger steps, verification oracles, attachments) are shared with researchers **on request** — see the *Data access* section of the website. Data is provided for research and defensive purposes only and may not be redistributed.
 
+## Get involved
+
+CyberSploit is actively maintained and continuously expanded. We welcome:
+
+- **Feedback** — open a [GitHub issue](https://github.com/dangwenjing/Cybersploit/issues) or email us
+- **Research collaboration** — PoC linking, completion, validation, migration, trustworthiness
+- **New PoCs** — please submit by email (dangwenjing@tju.edu.cn), not via public issues; follow coordinated disclosure for unfixed vulnerabilities
+
 ## Citation
 
 Please cite the papers listed on the website's *Publications* section if you use CyberSploit.
