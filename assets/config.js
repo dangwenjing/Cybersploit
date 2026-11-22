@@ -41,17 +41,17 @@ window.CS_CONFIG = {
   // 进行中的工作（不写投稿去向）
   ongoing: [
     {
-      tag: "Linking",
+      tag: "Linking", status: "review",
       title: "RESYNC: Aspect-Guided Knowledge Modeling and Semantic Ranking for PoC–CVE Link Recovery",
       desc: "Recovers missing links between PoC reports and CVE records.",
     },
     {
-      tag: "Study",
+      tag: "Study", status: "review",
       title: "Real-World Usability of Vulnerability Proof-of-Concepts: A Comprehensive Study",
       desc: "Availability, completeness and reproducibility of PoCs in the wild.",
     },
     {
-      tag: "Migration",
+      tag: "Migration", status: "review",
       title: "PoC migration across software versions and the supply chain",
       desc: "Adapting existing PoCs to validate vulnerabilities in other versions and downstream products.",
     },
@@ -75,6 +75,38 @@ window.CS_CONFIG = {
       tag: "Patching", status: "open",
       title: "PoC-driven affected-version confirmation and patch-completeness checking",
       desc: "Using completed PoCs to pin down true affected ranges and to catch incomplete or mis-backported fixes.",
+    },
+  ],
+
+  // 专利与软件著作权（来源：证书，2026-11；权利人均为天津大学）
+  ip: [
+    {
+      tag: "Patent",
+      title: "A PoC Data Completion Method Based on Multi-Source Heterogeneous Vulnerability Data",
+      original: "一种基于多源异构漏洞数据的PoC数据补全方法",
+      people: "Sen Chen, Lingxiao Wang, Wenjing Dang",
+      detail: "Chinese invention patent ZL 2024 1 0761898.8 (CN 118747368 B), granted Jan 2025",
+    },
+    {
+      tag: "Patent",
+      title: "An LLM-Based PoC Generation Method for Web Application Vulnerabilities",
+      original: "一种基于大语言模型的Web应用程序漏洞PoC生成方法",
+      people: "Sen Chen, Mengyao Zhao",
+      detail: "Chinese invention patent ZL 2025 1 0184996.4 (CN 120030553 B), granted Oct 2025",
+    },
+    {
+      tag: "Software",
+      title: "CyberSploit Vulnerability PoC Retrieval Platform V1.0",
+      original: "CyberSploit漏洞PoC检索平台",
+      people: "Tianjin University",
+      detail: "Software copyright registration 2024SR1084479, Jul 2024",
+    },
+    {
+      tag: "Software",
+      title: "Completion: Vulnerability PoC Information Fusion Platform V1.0",
+      original: "Completion漏洞PoC信息融合平台",
+      people: "Tianjin University",
+      detail: "Software copyright registration 2025SR0871063, May 2025",
     },
   ],
 

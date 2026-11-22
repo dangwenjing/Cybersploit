@@ -28,6 +28,13 @@
 
 The website provides aspect-level search and basic metadata. Full records (PoC code, trigger steps, verification oracles, attachments) are shared with researchers **on request** — see the *Data access* section of the website. Data is provided for research and defensive purposes only and may not be redistributed.
 
+## Patents & software copyrights
+
+- *A PoC Data Completion Method Based on Multi-Source Heterogeneous Vulnerability Data* — Chinese invention patent ZL 2024 1 0761898.8 (CN 118747368 B)
+- *An LLM-Based PoC Generation Method for Web Application Vulnerabilities* — Chinese invention patent ZL 2025 1 0184996.4 (CN 120030553 B)
+- *CyberSploit Vulnerability PoC Retrieval Platform V1.0* — software copyright 2024SR1084479
+- *Completion: Vulnerability PoC Information Fusion Platform V1.0* — software copyright 2025SR0871063
+
 ## Get involved
 
 CyberSploit is actively maintained and continuously expanded. We welcome:
