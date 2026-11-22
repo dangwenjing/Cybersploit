@@ -32,7 +32,7 @@
   <div class="search-hero">
     <p class="eyebrow">Aspect-level search</p>
     <h2>Find PoCs by what they target, not just by CVE</h2>
-    <p class="lead">Combine key aspects — affected component, version, platform, vulnerability type, author, time — to locate PoC reports across all platforms, including those without a CVE ID.</p>
+    <p class="lead">Combine key aspects — affected component, version, platform, PoC form, vulnerability type, author, time — to locate PoC reports across all platforms, including those without a CVE ID.</p>
 
     <form id="f" role="search" autocomplete="off">
       <div class="searchbar">
@@ -46,6 +46,7 @@
           <label class="field"><span>Affected component</span><input class="input" id="a_prod" placeholder="e.g. Apache Struts, Linux kernel"></label>
           <label class="field"><span>Software version</span><input class="input" id="a_ver" placeholder="e.g. 2.4.49"></label>
           <label class="field"><span>Test platform</span><select id="a_plat"><option value="">Any platform</option></select></label>
+          <label class="field"><span>PoC form</span><select id="a_lang"><option value="">Any form</option><option value="code">Code-based (any language)</option><option value="text">Text-based</option></select></label>
         </div>
         <div class="aspect-group">
           <div class="group-title">Vulnerability</div>
@@ -103,6 +104,7 @@
   function opt(sel, v, t) { var o = document.createElement("option"); o.value = v; o.textContent = t; sel.appendChild(o); }
   M.platforms.forEach(function (p, i) { opt($("a_plat"), i, p); });
   M.vtypes.forEach(function (p, i) { opt($("a_type"), i, p); });
+  (M.langs || []).forEach(function (p, i) { opt($("a_lang"), i, "Code — " + p); });
   M.shards.forEach(function (s) { opt($("a_src"), s.src, M.sources[s.src]); });
   var Y = new Date().getFullYear();
   for (var y = Y; y >= 1995; y--) { opt($("y0"), y, y); opt($("y1"), y, y); }
@@ -114,7 +116,7 @@
     d.rows.forEach(function (r) {
       var prod = r[3] >= 0 ? P[r[3]] : "", auth = r[7] >= 0 ? A[r[7]] : "";
       ALL.push({ s: d.src, t: r[0], c: r[1], y: r[2], p: prod, v: r[4], pl: r[5], ty: r[6], a: auth, id: r[8],
-                 hay: (r[0] + " " + r[1] + " " + prod).toLowerCase(), pl_: prod.toLowerCase(), a_: auth.toLowerCase() });
+                 lg: r.length > 9 ? r[9] : -1, hay: (r[0] + " " + r[1] + " " + prod).toLowerCase(), pl_: prod.toLowerCase(), a_: auth.toLowerCase() });
     });
     loaded++;
     $("load").textContent = loaded < M.shards.length ? "Loading sources " + loaded + "/" + M.shards.length + "…" : "";
@@ -133,13 +135,16 @@
   function run() {
     var terms = val("q").split(/\s+/).filter(Boolean);
     var prod = val("a_prod"), ver = val("a_ver"), plat = $("a_plat").value, type = $("a_type").value;
-    var cve = val("a_cve"), hascve = $("a_hascve").value, auth = val("a_author"), src = $("a_src").value;
+    var lang = $("a_lang").value, cve = val("a_cve"), hascve = $("a_hascve").value, auth = val("a_author"), src = $("a_src").value;
     var y0 = +$("y0").value, y1 = +$("y1").value; if (y0 > y1) { var t = y0; y0 = y1; y1 = t; }
     var yearFilter = !(y0 === 1995 && y1 === Y);
     hits = ALL.filter(function (r) {
       if (src !== "" && r.s !== +src) return false;
       if (plat !== "" && !(r.pl >> +plat & 1)) return false;
       if (type !== "" && !(r.ty >> +type & 1)) return false;
+      if (lang === "code" && r.lg < 0) return false;
+      if (lang === "text" && r.lg >= 0) return false;
+      if (lang !== "" && lang !== "code" && lang !== "text" && r.lg !== +lang) return false;
       if (hascve === "1" && !r.c) return false;
       if (hascve === "0" && r.c) return false;
       if (cve && r.c.toLowerCase().indexOf(cve) === -1) return false;
@@ -165,7 +170,7 @@
       var pl = bits(r.pl, M.platforms).map(function (x) { return '<span class="src">' + CS.esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
       var ty = bits(r.ty, M.vtypes).map(function (x) { return '<span class="src">' + CS.esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
       var mail = CS.mailto("CyberSploit data request: " + M.sources[r.s] + " #" + r.id, "Record: " + M.sources[r.s] + " #" + r.id + (r.c ? "\nCVE: " + r.c : "") + "\nName:\nAffiliation:\nIntended use:\n");
-      return "<tr><td class=\"title\"><div class=\"rsrc\">" + CS.esc(M.sources[r.s]) + "</div>" + '<div class="rt" title="' + CS.esc(r.t) + '">' + (CS.esc(r.t) || '<span class="dim">Untitled</span>') + "</div>" +
+      return "<tr><td class=\"title\"><div class=\"rsrc\">" + CS.esc(M.sources[r.s]) + (r.lg >= 0 ? " · " + CS.esc(M.langs[r.lg]) : "") + "</div>" + '<div class="rt" title="' + CS.esc(r.t) + '">' + (CS.esc(r.t) || '<span class="dim">Untitled</span>') + "</div>" +
         '<div class="cves">' + cves + "</div></td><td>" + (CS.esc(r.p) || '<span class="dim">—</span>') + (r.v ? '<div class="ver">' + CS.esc(r.v) + "</div>" : "") +
         "</td><td>" + pl + "</td><td>" + ty + "</td><td class=\"auth\">" + (CS.esc(r.a) || '<span class="dim">—</span>') + '</td><td class="num">' + (r.y || "—") +
         '</td><td><a class="btn sm" href="' + mail + '">Request</a></td></tr>';
@@ -179,7 +184,7 @@
   var timer; function later() { clearTimeout(timer); timer = setTimeout(run, 200); }
   $("f").addEventListener("submit", function (e) { e.preventDefault(); run(); });
   ["a_prod", "a_ver", "a_cve", "a_author", "q"].forEach(function (id) { $(id).addEventListener("input", later); });
-  ["a_plat", "a_type", "a_hascve", "a_src", "y0", "y1"].forEach(function (id) { $(id).addEventListener("change", run); });
+  ["a_plat", "a_lang", "a_type", "a_hascve", "a_src", "y0", "y1"].forEach(function (id) { $(id).addEventListener("change", run); });
   $("reset").addEventListener("click", function () { $("f").reset(); $("y0").value = 1995; $("y1").value = Y; run(); });
   var p = new URLSearchParams(location.search); ["q", "a_prod", "a_ver", "a_cve", "a_author"].forEach(function (k) { if (p.get(k)) $(k).value = p.get(k); });
 })();

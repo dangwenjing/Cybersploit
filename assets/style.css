@@ -182,6 +182,33 @@ details.tbl summary { cursor: pointer; color: var(--muted); font-size: 12.5px; }
 details.tbl table { margin-top: 8px; font-size: 13px; }
 details.tbl th, details.tbl td { padding: 6px 10px; }
 
+/* ---------- statistics ---------- */
+.group-h { display: flex; align-items: center; gap: 12px; font-size: 20px; margin: 44px 0 16px; }
+.group-h:first-of-type { margin-top: 0; }
+.group-h span { font: 600 12px var(--mono); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 6px; padding: 3px 7px; }
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stat-grid.three { grid-template-columns: repeat(3, 1fr); }
+.stat-grid .wide { grid-column: 1 / -1; }
+@media (max-width: 960px) { .stat-grid, .stat-grid.three { grid-template-columns: 1fr; } }
+.stat .big { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+.stat .big.sm { font-size: 30px; }
+.stat h3 { font-size: 15px; font-weight: 560; color: var(--text); margin-top: 6px; letter-spacing: -0.005em; }
+.stat .sub { color: var(--text-2); font-size: 13.5px; margin: 6px 0 16px; }
+.stat .chart { margin-top: 8px; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.tiles .big { font-size: 32px; }
+.tiles .tl { color: var(--text-2); font-size: 13px; margin-top: 4px; }
+.meter { margin-top: 14px; }
+.meter .track { height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--series-1) 18%, var(--surface-2)); overflow: hidden; }
+.meter .fill { height: 100%; border-radius: 999px; background: var(--series-1); }
+.legend { display: flex; gap: 18px; font-size: 12.5px; color: var(--text-2); margin: 4px 0 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.legend .k-before, .chart .db-before { background: var(--muted); fill: var(--muted); }
+.legend .k-after, .chart .db-after { background: var(--series-1); fill: var(--series-1); }
+.chart .db-after, .chart .db-before { stroke: var(--surface); stroke-width: 2; }
+.chart .db-line { stroke: var(--axis); stroke-width: 2; }
+
 /* ---------- statistics placeholder ---------- */
 .placeholder-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 760px) { .placeholder-grid { grid-template-columns: 1fr; } }

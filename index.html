@@ -38,7 +38,7 @@
       <p class="eyebrow">Vulnerability Proof-of-Concept Intelligence</p>
       <h1>Cyber<span class="accent">Sploit</span></h1>
       <p class="tagline">
-        A large-scale vulnerability PoC dataset <strong>unified from 13 public platforms</strong>,
+        A large-scale vulnerability PoC dataset <strong>unified from diverse, continuously expanding sources</strong>,
         <strong>structured by key aspects</strong>, and <strong>enhanced</strong> by multi-source completion
         and PoC–CVE link recovery — built to make public PoCs findable, complete, and reproducible.
       </p>
@@ -51,9 +51,9 @@
         <div class="kpi" role="listitem"><div class="v" data-stat="total_records">289,065</div><div class="l">PoC reports from public platforms</div></div>
         <div class="kpi" role="listitem"><div class="v" data-stat="unique_cves">61,426</div><div class="l">CVEs with at least one public PoC</div></div>
         <div class="kpi hl" role="listitem"><div class="v" data-stat="records_without_cve">173,714</div><div class="l">PoCs without a CVE ID — invisible to CVE-indexed datasets</div></div>
-        <div class="kpi hl" role="listitem"><div class="v" data-stat="cves_beyond_edb_github">25,819</div><div class="l">CVEs whose PoCs are in neither Exploit-DB nor PoC-in-GitHub</div></div>
+        <div class="kpi hl" role="listitem"><div class="v" id="kpi-kev">69.6%</div><div class="l">of known-exploited vulnerabilities (CISA KEV) covered with a PoC</div></div>
       </div>
-      <p class="release" id="release">Release v2026.11 · 11 of 13 platforms exported · Red Hat Bugzilla and Chromium being added</p>
+      <p class="release" id="release">Release v2026.11 · continuously updated and expanding</p>
       <div class="highlights">
         <div><b>86,595</b> reports enhanced by multi-source fusion <span class="cite">TIFS'26</span></div>
         <div><b>96.3%</b> PoC–CVE link recovery, Recall@10 <span class="cite">RESYNC</span></div>
@@ -74,9 +74,9 @@
         <article class="card">
           <span class="num">01</span>
           <h3>Multi-source collection</h3>
-          <p>PoC reports from 13 platforms — exploit databases, vulnerability advisories, mailing lists, bug trackers and code hosting — deduplicated and unified under one schema. PoCs without a CVE ID are kept and made searchable, instead of being dropped.</p>
+          <p>PoC reports from exploit databases, vulnerability advisories, mailing lists, bug trackers and code hosting — deduplicated, unified under one schema, and continuously expanded with new sources. PoCs without a CVE ID are kept and made searchable, instead of being dropped.</p>
           <div class="metrics">
-            <div class="metric"><div class="mv">13</div><div class="ml">platforms in one schema</div></div>
+            <div class="metric"><div class="mv" data-stat="total_records">290,477</div><div class="ml">PoC reports in one schema</div></div>
             <div class="metric"><div class="mv">CVE + non-CVE</div><div class="ml">PoCs both covered</div></div>
           </div>
         </article>
@@ -148,7 +148,7 @@
       <div class="pipeline">
         <div class="card step">
           <div class="k">STAGE 1</div><h3>Collect</h3>
-          <p>Incremental crawlers and official data feeds for 13 platforms; strict PoC filtering; cross-source deduplication.</p>
+          <p>Incremental collection from diverse PoC sources; strict PoC filtering; cross-source deduplication.</p>
           <div class="res">Code, text, attachment and link-based PoCs</div>
         </div>
         <div class="card step">
@@ -183,19 +183,76 @@
     </div>
   </section>
 
-  <!-- ============ STATISTICS (placeholder) ============ -->
+  <!-- ============ STATISTICS ============ -->
   <section id="statistics">
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Statistics</p>
-        <h2>Dataset statistics</h2>
-        <p class="lead">Statistics for the current release are being finalized and will be published together with the complete data snapshot.</p>
+        <h2>Comprehensive. High-quality. Usable.</h2>
+        <p class="lead" id="stats-lead">Figures for the current release.</p>
       </div>
-      <div class="placeholder-grid">
-        <div class="card ph"><h3>Coverage by source</h3><p>PoC reports and CVEs contributed by each platform, including CVEs found only in a single source.</p><div class="ph-bars"><i></i><i></i><i></i><i></i><i></i></div><span class="soon">Coming soon</span></div>
-        <div class="card ph"><h3>Coverage over time</h3><p>Share of disclosed CVEs with at least one public PoC, by year.</p><div class="ph-cols"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="soon">Coming soon</span></div>
-        <div class="card ph"><h3>Aspect completeness</h3><p>Presence of each key aspect per source, before and after multi-source completion.</p><div class="ph-heat"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="soon">Coming soon</span></div>
-        <div class="card ph"><h3>Vulnerability types &amp; PoC forms</h3><p>Top CWE categories, code-based vs. text-based PoCs and programming languages.</p><div class="ph-bars"><i></i><i></i><i></i><i></i><i></i></div><span class="soon">Coming soon</span></div>
+
+      <h3 class="group-h"><span>01</span>Comprehensive</h3>
+      <div class="stat-grid">
+        <div class="card stat">
+          <div class="big" id="s-kev">—</div>
+          <h3>of known-exploited vulnerabilities have a PoC</h3>
+          <p class="sub" id="s-kev-sub">CISA Known Exploited Vulnerabilities catalog</p>
+          <div id="c-kev"></div>
+        </div>
+        <div class="card stat">
+          <div class="tiles">
+            <div><div class="big" id="s-vendors">—</div><div class="tl">vendors</div></div>
+            <div><div class="big" id="s-products">—</div><div class="tl">products</div></div>
+            <div><div class="big" id="s-cwes">—</div><div class="tl">CWE weakness types</div></div>
+          </div>
+          <h3 style="margin-top:14px">Breadth of affected software</h3>
+          <p class="sub">Distinct vendors, products and weakness types among CVEs with PoCs.</p>
+        </div>
+        <div class="card stat wide">
+          <div class="big" id="s-recent">—</div>
+          <h3 id="s-recent-h">CVEs with PoCs, by CVE year</h3>
+          <p class="sub">Continuous coverage from 1999 to the latest disclosures. Hover a column for the share of that year's CVEs.</p>
+          <div class="chart" id="c-years"></div>
+        </div>
+      </div>
+
+      <h3 class="group-h"><span>02</span>High-quality</h3>
+      <div class="stat-grid">
+        <div class="card stat">
+          <div class="big" id="s-multi">—</div>
+          <h3>of CVEs are corroborated by PoCs from 2+ independent sources</h3>
+          <p class="sub">CVEs by number of independent sources with a PoC.</p>
+          <div class="chart" id="c-multi"></div>
+        </div>
+        <div class="card stat">
+          <div class="big">51.8% → 73.6%</div>
+          <h3>average presence of reproduction aspects, before → after fusion</h3>
+          <p class="sub">Reports sharing a CVE across three major sources, previous release. <span class="cite">PoC Study</span></p>
+          <div class="chart" id="c-fusion"></div>
+        </div>
+      </div>
+
+      <h3 class="group-h"><span>03</span>Usable</h3>
+      <div class="stat-grid three">
+        <div class="card stat">
+          <div class="big">47% → 78%</div>
+          <h3>reports with both trigger steps and software version</h3>
+          <div class="big sm" style="margin-top:18px">14 → 43</div>
+          <h3>reproducible PoCs in a manual study of 80</h3>
+          <p class="sub">Before → after multi-source completion. <span class="cite">TIFS'26</span></p>
+        </div>
+        <div class="card stat">
+          <div class="big" id="s-link">—</div>
+          <h3>of PoC reports explicitly linked to a CVE</h3>
+          <div id="c-link"></div>
+          <p class="sub" style="margin-top:14px">Missing links are recovered by RESYNC with <b>96.3%</b> Recall@10. <span class="cite">RESYNC</span></p>
+        </div>
+        <div class="card stat">
+          <div class="big" id="s-code">—</div>
+          <h3 id="s-code-h">executable, code-based PoCs</h3>
+          <div class="chart" id="c-langs"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -273,6 +330,7 @@
 
 <script src="assets/config.js"></script>
 <script src="assets/common.js"></script>
+<script src="assets/charts.js"></script>
 <script src="data/stats.js"></script>
 <script>
   // 首屏数字随导出的数据版本自动更新
@@ -281,9 +339,49 @@
     document.querySelectorAll("[data-stat]").forEach(function (el) {
       var v = S[el.dataset.stat]; if (typeof v === "number") el.textContent = v.toLocaleString("en-US");
     });
-    var pending = (S.per_source || []).filter(function (p) { return !p.records; }).map(function (p) { return p.label; });
-    document.getElementById("release").textContent = "Release " + S.version + " · " + S.sources_active + " of " + S.sources_total +
-      " platforms exported" + (pending.length ? " · " + pending.join(" and ") + " being added" : "");
+    document.getElementById("release").textContent = "Release " + S.version + " · continuously updated and expanding";
+    var pct = function (a, b) { return (100 * a / b).toFixed(1) + "%"; };
+    var $ = function (id) { return document.getElementById(id); };
+    var C = window.CSCharts, f = C.fmt;
+    $("stats-lead").textContent = "Figures for release " + S.version + ", computed over " + f(S.total_records) + " PoC reports and " + f(S.unique_cves) + " CVEs.";
+
+    // ---- Comprehensive
+    if (S.kev) {
+      $("kpi-kev").textContent = $("s-kev").textContent = pct(S.kev.covered, S.kev.total);
+      $("s-kev-sub").textContent = f(S.kev.covered) + " of " + f(S.kev.total) + " CVEs in the CISA Known Exploited Vulnerabilities catalog.";
+      C.meter($("c-kev"), +(100 * S.kev.covered / S.kev.total).toFixed(1), "KEV coverage");
+    }
+    if (S.breadth) { $("s-vendors").textContent = f(S.breadth.vendors); $("s-products").textContent = f(S.breadth.products); $("s-cwes").textContent = f(S.breadth.cwes); }
+    if (S.years && S.years.length) {
+      var last = S.years[S.years.length - 1];
+      $("s-recent").textContent = f(last[2]);
+      $("s-recent-h").textContent = "CVEs from " + last[0] + " already have PoCs — coverage by CVE year";
+      C.columns($("c-years"), S.years.map(function (y) {
+        return [String(y[0]).slice(2) === "99" || y[0] % 5 === 0 ? String(y[0]) : "'" + String(y[0]).slice(2), y[2],
+          "<b>CVE-" + y[0] + "</b><br>" + f(y[2]) + " CVEs with PoCs<br>" + pct(y[2], y[1]) + " of " + f(y[1]) + " CVEs that year"];
+      }), { tickEvery: 1, title: "CVEs with PoCs by CVE year", tableHead: ["Year", "CVEs with PoCs", "All CVEs"],
+            tableRows: S.years.map(function (y) { return [String(y[0]), y[2], y[1]]; }) });
+    }
+
+    // ---- High-quality
+    var md = S.multi_source_dist || [], tot = md.reduce(function (a, d) { return a + d[1]; }, 0);
+    var multi = md.filter(function (d) { return d[0] >= 2; }).reduce(function (a, d) { return a + d[1]; }, 0);
+    if (tot) {
+      $("s-multi").textContent = pct(multi, tot);
+      C.barsH($("c-multi"), md.map(function (d) { return [d[0] === 4 ? "4+ sources" : d[0] + (d[0] === 1 ? " source" : " sources"), d[1], pct(d[1], tot) + " of CVEs"]; }),
+        { unit: "CVEs", head: ["Independent sources", "CVEs"], labelWidth: 100 });
+    }
+    C.dumbbell($("c-fusion"), [["Reference", 95.3, 100], ["Test Platform", 45.0, 99.8], ["Software Version", 74.9, 100],
+      ["Trigger Step", 42.9, 66.5], ["Verification Oracle", 1.0, 2.0]], { title: "Aspect presence before and after fusion" });
+
+    // ---- Usable
+    $("s-link").textContent = S.linkage_pct + "%";
+    C.meter($("c-link"), S.linkage_pct, "Explicit CVE linkage");
+    var langs = S.languages || [];
+    $("s-code").textContent = f(S.code_reports);
+    $("s-code-h").textContent = "executable, code-based PoCs in " + langs.length + " languages";
+    C.barsH($("c-langs"), langs.slice(0, 8).map(function (l) { return [l[0], l[1], pct(l[1], S.code_reports) + " of code-based PoCs"]; }),
+      { unit: "PoCs", head: ["Language", "PoCs"], labelWidth: 112 });
   })();
 </script>
 <script>
@@ -295,7 +393,7 @@
       return "<tr><td>" + CS.esc(r.name) + "</td><td>" + CS.esc(r.scope) + "</td><td>" + cell(r.nonCve) + "</td><td>" + cell(r.aspects) +
         "</td><td>" + cell(r.completion) + "</td><td>" + cell(r.linking) + "</td></tr>";
     });
-    rows.unshift('<tr class="ours"><td>CyberSploit</td><td>13 platforms</td><td>' + mark.yes + "</td><td>" + mark.yes + "</td><td>" + mark.yes +
+    rows.unshift('<tr class="ours"><td>CyberSploit</td><td>Multi-source, expanding</td><td>' + mark.yes + "</td><td>" + mark.yes + "</td><td>" + mark.yes +
       "</td><td>" + mark.yes + "</td></tr>");
     document.querySelector("#compare-table tbody").innerHTML = rows.join("");
     document.getElementById("compare-note").textContent = "Comparison as of " + C.compareAsOf + ".";
