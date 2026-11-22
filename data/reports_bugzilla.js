@@ -1,1 +1,1 @@
-CS_SHARD({"src":11,"products":["vulnerability"],"authors":[],"rows":[["kernel: kernel: memory corruption via improper VMA boundary merge","CVE-2026-99648",2026,0,"",0,64,-1,"2577774",-1],["kernel: kernel: batman-adv: Denial of Service via race condition during mesh teardown","CVE-2026-99761",2026,0,"",0,270336,-1,"2577750",-1]]});
+CS_SHARD({"src":11,"products":["vulnerability"],"authors":[],"rows":[["pydantic: pydantic: Validation bypass via internal initialization attribute","CVE-2026-133276",2026,0,"",0,4096,-1,"2577043",-1]]});

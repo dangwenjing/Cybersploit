@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611221954">
+  <link rel="stylesheet" href="assets/style.css?v=202611222021">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -78,8 +78,9 @@
   <div class="result-meta"><span id="meta">Loading index…</span><span id="load">Sorted by aspect completeness, then year</span></div>
   <div class="table-wrap">
     <table class="results">
-      <thead><tr><th>Report</th><th>Component · Version</th><th>Platform</th><th>Type</th><th>Author</th><th class="num">Year</th><th></th></tr></thead>
-      <tbody id="rows"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+      <colgroup><col style="width:38%"><col style="width:19%"><col style="width:12%"><col style="width:15%"><col style="width:10%"><col style="width:6%"></colgroup>
+      <thead><tr><th>Report</th><th>Component · Version</th><th>Platform</th><th>Type</th><th>Author</th><th class="num">Year</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody>
     </table>
   </div>
   <div class="pager" id="pager"></div>
@@ -92,10 +93,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611221954"></script>
-<script src="assets/common.js?v=202611221954"></script>
-<script>window.CS_BUILD = "202611221954";</script>
-<script src="data/meta.js?v=202611221954"></script>
+<script src="assets/config.js?v=202611222021"></script>
+<script src="assets/common.js?v=202611222021"></script>
+<script>window.CS_BUILD = "202611222021";</script>
+<script src="data/meta.js?v=202611222021"></script>
 <script>
 (function () {
   var M = window.CS_META, PAGE = 40, $ = function (id) { return document.getElementById(id); };
@@ -165,16 +166,15 @@
   function render() {
     $("meta").textContent = hits.length.toLocaleString() + " report" + (hits.length === 1 ? "" : "s") + " match";
     var slice = hits.slice(page * PAGE, page * PAGE + PAGE);
-    if (!slice.length) { $("rows").innerHTML = '<tr><td colspan="7" class="empty">' + (loaded ? "No matching reports." : "Loading…") + "</td></tr>"; $("pager").innerHTML = ""; return; }
+    if (!slice.length) { $("rows").innerHTML = '<tr><td colspan="6" class="empty">' + (loaded ? "No matching reports." : "Loading…") + "</td></tr>"; $("pager").innerHTML = ""; return; }
     $("rows").innerHTML = slice.map(function (r) {
       var cves = r.c ? r.c.split(" ").map(function (c) { return '<a class="cvechip" href="https://nvd.nist.gov/vuln/detail/' + CS.esc(c) + '" target="_blank" rel="noopener">' + CS.esc(c) + "</a>"; }).join("") : '<span class="nocve">No CVE</span>';
       var pl = bits(r.pl, M.platforms).map(function (x) { return '<span class="src">' + CS.esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
       var ty = bits(r.ty, M.vtypes).map(function (x) { return '<span class="src">' + CS.esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
       var mail = CS.mailto("CyberSploit data request: " + M.sources[r.s] + " #" + r.id, "Record: " + M.sources[r.s] + " #" + r.id + (r.c ? "\nCVE: " + r.c : "") + "\nName:\nAffiliation:\nIntended use:\n");
       return "<tr><td class=\"title\"><div class=\"rsrc\">" + CS.esc(M.sources[r.s]) + (r.lg >= 0 ? " · " + CS.esc(M.langs[r.lg]) : "") + "</div>" + '<div class="rt" title="' + CS.esc(r.t) + '">' + (CS.esc(r.t) || '<span class="dim">Untitled</span>') + "</div>" +
-        '<div class="cves">' + cves + "</div></td><td>" + (CS.esc(r.p) || '<span class="dim">—</span>') + (r.v ? '<div class="ver">' + CS.esc(r.v) + "</div>" : "") +
-        "</td><td>" + pl + "</td><td>" + ty + "</td><td class=\"auth\">" + (CS.esc(r.a) || '<span class="dim">—</span>') + '</td><td class="num">' + (r.y || "—") +
-        '</td><td><a class="btn sm" href="' + mail + '">Request</a></td></tr>';
+        '<div class="cves">' + cves + '<a class="req" href="' + mail + '">Request record →</a></div></td><td>' + (CS.esc(r.p) || '<span class="dim">—</span>') + (r.v ? '<div class="ver">' + CS.esc(r.v) + "</div>" : "") +
+        "</td><td>" + pl + "</td><td>" + ty + "</td><td class=\"auth\">" + (CS.esc(r.a) || '<span class="dim">—</span>') + '</td><td class="num">' + (r.y || "—") + "</td></tr>";
     }).join("");
     var pages = Math.ceil(hits.length / PAGE);
     $("pager").innerHTML = pages > 1 ? '<button class="btn" id="prev"' + (page ? "" : " disabled") + '>← Prev</button><span class="pg">Page ' +
