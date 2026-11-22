@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v=202611221954">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -92,9 +92,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js"></script>
-<script src="assets/common.js"></script>
-<script src="data/meta.js"></script>
+<script src="assets/config.js?v=202611221954"></script>
+<script src="assets/common.js?v=202611221954"></script>
+<script>window.CS_BUILD = "202611221954";</script>
+<script src="data/meta.js?v=202611221954"></script>
 <script>
 (function () {
   var M = window.CS_META, PAGE = 40, $ = function (id) { return document.getElementById(id); };
@@ -128,7 +129,7 @@
     }
     else if (loaded % 3 === 0) run();
   };
-  M.shards.forEach(function (s) { var e = document.createElement("script"); e.src = "data/" + s.file; e.async = true; document.body.appendChild(e); });
+  M.shards.forEach(function (s) { var e = document.createElement("script"); e.src = "data/" + s.file + "?v=" + (window.CS_BUILD || ""); e.async = true; document.body.appendChild(e); });
 
   // ---- search
   function val(id) { return $(id).value.trim().toLowerCase(); }
