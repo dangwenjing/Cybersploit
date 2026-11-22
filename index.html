@@ -49,7 +49,7 @@
       </div>
       <div class="kpis" role="list">
         <div class="kpi" role="listitem"><div class="v">13</div><div class="l">public PoC platforms unified into one schema</div></div>
-        <div class="kpi" role="listitem"><div class="v">8</div><div class="l">key aspects extracted per report <span class="cite">TIFS'26</span></div></div>
+        <div class="kpi" role="listitem"><div class="v">86,595</div><div class="l">PoC reports enhanced by multi-source fusion <span class="cite">TIFS'26</span></div></div>
         <div class="kpi hl" role="listitem"><div class="v">96.3%</div><div class="l">PoC–CVE link recovery, Recall@10 <span class="cite">RESYNC</span></div></div>
         <div class="kpi hl" role="listitem"><div class="v">91.3%</div><div class="l">correctness of multi-source aspect completion <span class="cite">TIFS'26</span></div></div>
       </div>
@@ -61,26 +61,26 @@
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">What CyberSploit adds</p>
-        <h2>Not just collected — structured, linked, completed, and verified.</h2>
-        <p class="lead">Public PoCs are scattered across platforms, often lack CVE identifiers, and miss the information needed to reproduce them. CyberSploit addresses each of these gaps with a dedicated, peer-reviewed technique.</p>
+        <h2>Not just collected — structured, linked, and completed.</h2>
+        <p class="lead">Public PoCs are scattered across platforms, often lack CVE identifiers, and miss the information needed to reproduce them. CyberSploit addresses each of these gaps with a dedicated technique.</p>
       </div>
       <div class="contrib">
         <article class="card">
           <span class="num">01</span>
           <h3>Multi-source collection</h3>
-          <p>PoC reports from 13 platforms — exploit databases, vulnerability advisories, mailing lists, bug trackers and code hosting — deduplicated and unified under one schema, including PoCs that carry no CVE ID.</p>
+          <p>PoC reports from 13 platforms — exploit databases, vulnerability advisories, mailing lists, bug trackers and code hosting — deduplicated and unified under one schema. PoCs without a CVE ID are kept and made searchable, instead of being dropped.</p>
           <div class="metrics">
-            <div class="metric"><div class="mv">13</div><div class="ml">platforms</div></div>
-            <div class="metric"><div class="mv">76.4%</div><div class="ml">of public PoCs lack a CVE ID <span class="cite">RESYNC</span></div></div>
+            <div class="metric"><div class="mv">13</div><div class="ml">platforms in one schema</div></div>
+            <div class="metric"><div class="mv">CVE + non-CVE</div><div class="ml">PoCs both covered</div></div>
           </div>
         </article>
         <article class="card">
           <span class="num">02</span>
           <h3>Key-aspect structuring</h3>
-          <p>Every report — code or free text — is decomposed into eight key aspects that determine whether a PoC can be reproduced and found. This exposes how incomplete public PoC reports really are.</p>
+          <p>Every report — code or free text — is decomposed into eight key aspects that determine whether a PoC can be reproduced and found, enabling search by component, version, platform and more.</p>
           <div class="metrics">
-            <div class="metric"><div class="mv">0.96 / 0.94</div><div class="ml">extraction precision / recall</div></div>
-            <div class="metric"><div class="mv">0.034%</div><div class="ml">of raw reports contain all 8 aspects <span class="cite">TIFS'26</span></div></div>
+            <div class="metric"><div class="mv">8</div><div class="ml">key aspects per report</div></div>
+            <div class="metric"><div class="mv">0.96 / 0.94</div><div class="ml">extraction precision / recall <span class="cite">TIFS'26</span></div></div>
           </div>
         </article>
         <article class="card">
@@ -90,7 +90,7 @@
           <div class="metrics">
             <div class="metric"><div class="mv">96.3%</div><div class="ml">Recall@10</div></div>
             <div class="metric"><div class="mv">0.85</div><div class="ml">MRR</div></div>
-            <div class="metric"><div class="mv">2.00</div><div class="ml">candidates checked on average <span class="cite">RESYNC</span></div></div>
+            <div class="metric"><div class="mv">1.2–3.9×</div><div class="ml">over baselines <span class="cite">RESYNC</span></div></div>
           </div>
         </article>
         <article class="card">
@@ -114,14 +114,14 @@
       <div class="section-head">
         <p class="eyebrow">Comparison</p>
         <h2>How CyberSploit differs from existing PoC resources</h2>
-        <p class="lead">Existing resources typically cover a single platform or index PoCs only by CVE. CyberSploit is the only one that combines multi-source coverage with aspect-level structure, completion, linking and human verification.</p>
+        <p class="lead">Existing resources typically cover a single platform or index PoCs only by CVE. CyberSploit is the only one that combines multi-source coverage with aspect-level structure, multi-source completion and PoC–CVE link recovery.</p>
       </div>
       <div class="table-wrap">
         <table class="compare" id="compare-table">
           <thead>
             <tr>
               <th>Resource</th><th>Sources</th><th>PoCs without CVE</th><th>Key-aspect structure</th>
-              <th>Multi-source completion</th><th>PoC–CVE link recovery</th><th>Reproduction-verified</th><th>Updated</th>
+              <th>Multi-source completion</th><th>PoC–CVE link recovery</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -137,7 +137,7 @@
       <div class="section-head">
         <p class="eyebrow">Methodology</p>
         <h2>From scattered reports to structured, actionable PoCs</h2>
-        <p class="lead">Each release of CyberSploit is produced by the same five-stage pipeline. Results below are those reported in our papers.</p>
+        <p class="lead">Each release of CyberSploit is produced by the same four-stage pipeline. Results below are those reported in our papers.</p>
       </div>
       <div class="pipeline">
         <div class="card step">
@@ -159,11 +159,6 @@
           <div class="k">STAGE 4</div><h3>Complete</h3>
           <p>Missing aspects filled from CVE entries and complementary PoCs, after a behavioral-compatibility check.</p>
           <div class="res">Correctness <b>91.3%</b></div>
-        </div>
-        <div class="card step">
-          <div class="k">STAGE 5</div><h3>Verify</h3>
-          <p>Manual reproduction of sampled reports before and after completion to validate quality.</p>
-          <div class="res">Reproducible <b>14 → 43</b> of 80</div>
         </div>
       </div>
 
@@ -204,13 +199,13 @@
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Community impact</p>
-        <h2>Accepted by the vulnerability ecosystem</h2>
-        <p class="lead">Results produced with CyberSploit's techniques have been contributed back to official vulnerability databases and PoC platforms.</p>
+        <h2>Adopted by official vulnerability records</h2>
+        <p class="lead">Results produced with CyberSploit's techniques have been accepted into the CVE and NVD records and confirmed by software maintainers.</p>
       </div>
       <div class="impact">
-        <div class="card"><div class="big">15<small> / 20</small></div><h3 style="margin-top:12px">PoC links added to CVE records</h3><p>Recovered PoC–CVE links submitted through official CVE channels and incorporated into public records. <span class="cite">RESYNC</span></p></div>
-        <div class="card"><div class="big">7<small> / 20</small></div><h3 style="margin-top:12px">Completed PoC reports accepted</h3><p>Completed reports submitted to CVE and PoC platforms, all CVE submissions published; further acceptances on CXSecurity. <span class="cite">TIFS'26</span></p></div>
-        <div class="card"><div class="big">2</div><h3 style="margin-top:12px">Incomplete fixes confirmed</h3><p>Replaying completed PoCs exposed incomplete patches in AVideo, acknowledged by maintainers; NVD affected ranges corrected (e.g., CVE-2021-4019). <span class="cite">TIFS'26</span></p></div>
+        <div class="card"><div class="big">20</div><h3 style="margin-top:12px">PoC references added to CVE records</h3><p>15 recovered PoC–CVE links and 5 completed PoC reports, submitted through official CVE channels and published in the public records. <span class="cite">RESYNC</span> <span class="cite">TIFS'26</span></p></div>
+        <div class="card"><div class="big">NVD</div><h3 style="margin-top:12px">Affected-version ranges corrected</h3><p>Replaying completed PoCs revealed products missing from official records — e.g., Neovim added to CVE-2021-4019, previously listed for Vim only. <span class="cite">TIFS'26</span></p></div>
+        <div class="card"><div class="big">2</div><h3 style="margin-top:12px">Incomplete security fixes confirmed</h3><p>Re-running completed PoCs against patched builds exposed two incomplete fixes in AVideo, acknowledged by the maintainers in GitHub security advisories. <span class="cite">TIFS'26</span></p></div>
       </div>
     </div>
   </section>
@@ -279,13 +274,12 @@
     var cell = function (v) { return mark[v] || CS.esc(v); };
     var rows = C.compare.map(function (r) {
       return "<tr><td>" + CS.esc(r.name) + "</td><td>" + CS.esc(r.scope) + "</td><td>" + cell(r.nonCve) + "</td><td>" + cell(r.aspects) +
-        "</td><td>" + cell(r.completion) + "</td><td>" + cell(r.linking) + "</td><td>" + cell(r.verified) + "</td><td>" + cell(r.updated) + "</td></tr>";
+        "</td><td>" + cell(r.completion) + "</td><td>" + cell(r.linking) + "</td></tr>";
     });
     rows.unshift('<tr class="ours"><td>CyberSploit</td><td>13 platforms</td><td>' + mark.yes + "</td><td>" + mark.yes + "</td><td>" + mark.yes +
-      "</td><td>" + mark.yes + "</td><td>" + mark.part + "</td><td>" + mark.yes + "</td></tr>");
+      "</td><td>" + mark.yes + "</td></tr>");
     document.querySelector("#compare-table tbody").innerHTML = rows.join("");
-    document.getElementById("compare-note").textContent =
-      "Comparison as of " + C.compareAsOf + ". “Reproduction-verified”: Partial = a manually reproduced subset; Exploit-DB marks some entries as verified.";
+    document.getElementById("compare-note").textContent = "Comparison as of " + C.compareAsOf + ".";
 
     document.getElementById("pubs").innerHTML = C.publications.map(function (p) {
       var doi = p.doi ? ' · <a href="https://doi.org/' + CS.esc(p.doi) + '" target="_blank" rel="noopener">DOI</a>' : "";

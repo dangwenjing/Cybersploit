@@ -199,7 +199,7 @@ details.tbl th, details.tbl td { padding: 6px 10px; }
 .ph-heat i:nth-child(3n) { opacity: 0.55; } .ph-heat i:nth-child(4n) { opacity: 0.8; }
 
 /* ---------- pipeline ---------- */
-.pipeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; counter-reset: step; }
+.pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; counter-reset: step; }
 @media (max-width: 960px) { .pipeline { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .pipeline { grid-template-columns: 1fr; } }
 .step { position: relative; padding: 20px; }
