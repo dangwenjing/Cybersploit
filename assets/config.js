@@ -16,17 +16,17 @@ window.CS_CONFIG = {
       doi: "10.1109/TIFS.2026.3744620",
     },
     {
-      tag: "ASE'26",
+      tag: "ASE'26 SRC",
       title: "Making Vulnerability Proof-of-Concepts Trustworthy and Usable: From Empirical Diagnosis to Operational Validation",
       authors: "Wenjing Dang",
-      venue: "41st IEEE/ACM International Conference on Automated Software Engineering (ASE '26), pp. 4648–4650",
+      venue: "ACM Student Research Competition, 41st IEEE/ACM International Conference on Automated Software Engineering (ASE '26), pp. 4648–4650",
       doi: "10.1145/3832783.3844563",
     },
     {
-      tag: "SWGeno'26",
+      tag: "ASE'26 Short",
       title: "Vulnerability Proof-of-Concepts in Software Supply Chain: Real-World Usage Scenarios from the Perspective of Migration",
       authors: "Wenjing Dang, Xiaohong Li, Sen Chen",
-      venue: "2nd International Workshop on Software Genomics (SWGeno '26), pp. 29–32",
+      venue: "Short paper, 2nd International Workshop on Software Genomics (SWGeno '26) @ ASE 2026, pp. 29–32",
       doi: "10.1145/3844178.3844647",
     },
     {
