@@ -9,9 +9,9 @@
 | | What it does | Result (as reported in our papers) |
 |---|---|---|
 | **Multi-source collection** | PoC reports from 13 platforms (exploit databases, advisories, mailing lists, bug trackers, code hosting), deduplicated under one schema — including PoCs without a CVE ID | 13 platforms |
-| **Key-aspect structuring & completion** | Eight key aspects extracted per report; missing aspects completed from CVE entries and behaviorally compatible PoCs | Extraction P/R 0.96/0.94; completion correctness 91.3%; reproducible PoCs 14 → 43 |
+| **Key-aspect structuring** | Eight key aspects extracted per report, from code or free text | Extraction P/R 0.96/0.94; only 0.034% of raw reports contain all eight |
 | **PoC–CVE link recovery** (RESYNC) | Recovers the CVE behind PoCs that do not cite one | Recall@10 96.3%, MRR 0.85 |
-| **Human-verified reproducibility** | Large-scale manual reproduction study with recovery strategies | 150 CVEs / 327 reports; 28.0% → 78.7% reproduced |
+| **Multi-source fusion for quality** | Missing aspects completed from CVE entries and behaviorally complementary PoCs | 86,595 reports enhanced; correctness 91.3%; reproducible PoCs 14 → 43; retrieval Hit@10 0.66 → 0.88 |
 
 ### Key aspects
 

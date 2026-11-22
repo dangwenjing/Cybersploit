@@ -76,12 +76,11 @@
         </article>
         <article class="card">
           <span class="num">02</span>
-          <h3>Key-aspect structuring &amp; completion</h3>
-          <p>Every report is decomposed into eight key aspects. Missing aspects are completed from CVE entries and behaviorally compatible PoCs of the same vulnerability — fusing only when reports are complementary.</p>
+          <h3>Key-aspect structuring</h3>
+          <p>Every report — code or free text — is decomposed into eight key aspects that determine whether a PoC can be reproduced and found. This exposes how incomplete public PoC reports really are.</p>
           <div class="metrics">
             <div class="metric"><div class="mv">0.96 / 0.94</div><div class="ml">extraction precision / recall</div></div>
-            <div class="metric"><div class="mv">91.3%</div><div class="ml">completion correctness</div></div>
-            <div class="metric"><div class="mv">14 → 43</div><div class="ml">reproducible PoCs (of 80) <span class="cite">TIFS'26</span></div></div>
+            <div class="metric"><div class="mv">0.034%</div><div class="ml">of raw reports contain all 8 aspects <span class="cite">TIFS'26</span></div></div>
           </div>
         </article>
         <article class="card">
@@ -96,12 +95,13 @@
         </article>
         <article class="card">
           <span class="num">04</span>
-          <h3>Human-verified reproducibility</h3>
-          <p>A large-scale reproduction study measures how usable real-world PoCs are, and derives strategies — cross-source consolidation, inference of missing components, failure diagnosis, environment-aware adaptation — that recover failed reproductions.</p>
+          <h3>Multi-source fusion for quality</h3>
+          <p>Missing aspects are completed from CVE entries and from other PoCs of the same vulnerability — fusing only when reports are behaviorally complementary — turning incomplete reports into reproducible, searchable ones.</p>
           <div class="metrics">
-            <div class="metric"><div class="mv">150</div><div class="ml">CVEs, 327 reports</div></div>
-            <div class="metric"><div class="mv">28.0% → 78.7%</div><div class="ml">reproduced, before → after</div></div>
-            <div class="metric"><div class="mv">1,000+</div><div class="ml">person-hours <span class="cite">PoC Study</span></div></div>
+            <div class="metric"><div class="mv">86,595</div><div class="ml">reports enhanced</div></div>
+            <div class="metric"><div class="mv">91.3%</div><div class="ml">completion correctness</div></div>
+            <div class="metric"><div class="mv">14 → 43</div><div class="ml">reproducible PoCs (of 80)</div></div>
+            <div class="metric"><div class="mv">0.66 → 0.88</div><div class="ml">retrieval Hit@10 <span class="cite">TIFS'26</span></div></div>
           </div>
         </article>
       </div>
@@ -162,8 +162,8 @@
         </div>
         <div class="card step">
           <div class="k">STAGE 5</div><h3>Verify</h3>
-          <p>Manual reproduction on sampled CVEs to validate usability and completion quality.</p>
-          <div class="res">Reproduced <b>28.0% → 78.7%</b></div>
+          <p>Manual reproduction of sampled reports before and after completion to validate quality.</p>
+          <div class="res">Reproducible <b>14 → 43</b> of 80</div>
         </div>
       </div>
 

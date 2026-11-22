@@ -126,7 +126,8 @@ h3 { font-size: 17px; font-weight: 620; letter-spacing: -0.01em; }
 .contrib { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 @media (max-width: 760px) { .contrib { grid-template-columns: 1fr; } }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); }
-.contrib .card { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: start; }
+.contrib .card { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: start; align-content: start; }
+.contrib .card > :not(.num) { grid-column: 2; }
 .contrib .num { font: 600 12px var(--mono); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); border-radius: 6px; padding: 3px 7px; grid-row: span 3; }
 .contrib p { margin: 4px 0 0; color: var(--text-2); font-size: 14.5px; }
 .metrics { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
