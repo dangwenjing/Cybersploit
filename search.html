@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611222023">
+  <link rel="stylesheet" href="assets/style.css?v=202611222024">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -32,7 +32,7 @@
   <div class="search-hero">
     <p class="eyebrow">Aspect-level search</p>
     <h2>Find PoCs by what they target, not just by CVE</h2>
-    <p class="lead">Combine key aspects — affected component, version, platform, PoC form, vulnerability type, author, time — to locate PoC reports across all platforms, including those without a CVE ID.</p>
+    <p class="lead">Combine key aspects — affected component, version, platform, PoC form, vulnerability type, author, time — to locate PoC reports across the whole dataset, including those without a CVE ID.</p>
 
     <form id="f" role="search" autocomplete="off">
       <div class="searchbar">
@@ -58,7 +58,7 @@
           <div class="group-title">Provenance</div>
           <label class="field"><span>Author</span><input class="input" id="a_author" placeholder="Name or handle"></label>
           <label class="field"><span>Publish time</span><span class="range"><select id="y0"></select><em>–</em><select id="y1"></select></span></label>
-          <label class="field"><span>Source platform</span><select id="a_src"><option value="">All platforms</option></select></label>
+          <label class="field"><span>Origin</span><select id="a_src"><option value="">Any origin</option></select></label>
         </div>
         <div class="aspect-group future">
           <div class="group-title">Exploit details <span class="soon-tag">full release</span></div>
@@ -93,10 +93,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611222023"></script>
-<script src="assets/common.js?v=202611222023"></script>
-<script>window.CS_BUILD = "202611222023";</script>
-<script src="data/meta.js?v=202611222023"></script>
+<script src="assets/config.js?v=202611222024"></script>
+<script src="assets/common.js?v=202611222024"></script>
+<script>window.CS_BUILD = "202611222024";</script>
+<script src="data/meta.js?v=202611222024"></script>
 <script>
 (function () {
   var M = window.CS_META, PAGE = 40, $ = function (id) { return document.getElementById(id); };

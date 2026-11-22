@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611222023">
+  <link rel="stylesheet" href="assets/style.css?v=202611222024">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -39,9 +39,9 @@
       <p class="eyebrow">Vulnerability Proof-of-Concept Intelligence</p>
       <h1>Cyber<span class="accent">Sploit</span></h1>
       <p class="tagline">
-        A large-scale vulnerability PoC dataset <strong>unified from diverse, continuously expanding sources</strong>,
-        <strong>structured by key aspects</strong>, and <strong>enhanced</strong> by multi-source completion
-        and PoC–CVE link recovery — built to make public PoCs findable, complete, and reproducible.
+        A large-scale vulnerability PoC dataset, <strong>structured by key aspects</strong> and
+        <strong>enhanced</strong> by multi-source fusion and PoC–CVE link recovery —
+        built to make PoCs findable, complete, and reproducible.
       </p>
       <div class="cta">
         <a class="btn primary" href="search.html">Search the dataset →</a>
@@ -49,8 +49,8 @@
         <a class="btn" href="#access">Request full records</a>
       </div>
       <div class="kpis" role="list">
-        <div class="kpi" role="listitem"><div class="v" data-stat="total_records">289,065</div><div class="l">PoC reports from public platforms</div></div>
-        <div class="kpi" role="listitem"><div class="v" data-stat="unique_cves">61,426</div><div class="l">CVEs with at least one public PoC</div></div>
+        <div class="kpi" role="listitem"><div class="v" data-stat="total_records">289,065</div><div class="l">PoC reports</div></div>
+        <div class="kpi" role="listitem"><div class="v" data-stat="unique_cves">61,426</div><div class="l">CVEs with at least one PoC</div></div>
         <div class="kpi hl" role="listitem"><div class="v" data-stat="records_without_cve">173,714</div><div class="l">PoCs without a CVE ID — invisible to CVE-indexed datasets</div></div>
         <div class="kpi hl" role="listitem"><div class="v" id="kpi-kev">69.6%</div><div class="l">of known-exploited vulnerabilities (CISA KEV) covered with a PoC</div></div>
       </div>
@@ -68,14 +68,14 @@
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">What CyberSploit adds</p>
-        <h2>Not just collected — structured, linked, and completed.</h2>
-        <p class="lead">Public PoCs are scattered across platforms, often lack CVE identifiers, and miss the information needed to reproduce them. CyberSploit addresses each of these gaps with a dedicated technique.</p>
+        <h2>Structured, linked, and completed.</h2>
+        <p class="lead">Raw PoC reports often lack CVE identifiers and miss the information needed to reproduce them. CyberSploit addresses each of these gaps with a dedicated technique.</p>
       </div>
       <div class="contrib">
         <article class="card">
           <span class="num">01</span>
-          <h3>Multi-source collection</h3>
-          <p>PoC reports from exploit databases, vulnerability advisories, mailing lists, bug trackers and code hosting — deduplicated, unified under one schema, and continuously expanded with new sources. PoCs without a CVE ID are kept and made searchable, instead of being dropped.</p>
+          <h3>Large-scale unified PoC corpus</h3>
+          <p>Hundreds of thousands of PoC reports — exploit code, technical advisories, bug reports and disclosure write-ups — deduplicated, unified under one schema and continuously expanded. PoCs without a CVE ID are kept and made searchable, instead of being dropped.</p>
           <div class="metrics">
             <div class="metric"><div class="mv" data-stat="total_records">290,477</div><div class="ml">PoC reports in one schema</div></div>
             <div class="metric"><div class="mv">CVE + non-CVE</div><div class="ml">PoCs both covered</div></div>
@@ -143,13 +143,13 @@
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Methodology</p>
-        <h2>From scattered reports to structured, actionable PoCs</h2>
+        <h2>From raw reports to structured, actionable PoCs</h2>
         <p class="lead">Each release of CyberSploit is produced by the same four-stage pipeline. Results below are those reported in our papers.</p>
       </div>
       <div class="pipeline">
         <div class="card step">
-          <div class="k">STAGE 1</div><h3>Collect</h3>
-          <p>Incremental collection from diverse PoC sources; strict PoC filtering; cross-source deduplication.</p>
+          <div class="k">STAGE 1</div><h3>Curate</h3>
+          <p>Continuous intake of new PoCs, strict PoC filtering and deduplication into one schema.</p>
           <div class="res">Code, text, attachment and link-based PoCs</div>
         </div>
         <div class="card step">
@@ -229,7 +229,7 @@
         <div class="card stat">
           <div class="big">51.8% → 73.6%</div>
           <h3>average presence of reproduction aspects, before → after fusion</h3>
-          <p class="sub">Reports sharing a CVE across three major sources, previous release. <span class="cite">PoC Study</span></p>
+          <p class="sub">Reports sharing a CVE, previous release. <span class="cite">PoC Study</span></p>
           <div class="chart" id="c-fusion"></div>
         </div>
       </div>
@@ -294,7 +294,7 @@
       <div class="section-head">
         <p class="eyebrow">Get involved</p>
         <h2>Actively maintained — and open to the community</h2>
-        <p class="lead">CyberSploit is continuously updated with new PoCs and new sources, and its aspects, links and statistics are refreshed with every release. We welcome feedback, research collaboration and new PoC contributions.</p>
+        <p class="lead">CyberSploit is continuously updated with new PoCs, and its aspects, links and statistics are refreshed with every release. We welcome feedback, research collaboration and new PoC contributions.</p>
       </div>
       <div class="involve">
         <div class="card">
@@ -333,7 +333,7 @@
           <h3>What is public</h3>
           <ul>
             <li>Key-aspect search over the dataset</li>
-            <li>Basic metadata: CVE, title, author, publish time, source platform</li>
+            <li>Basic metadata: CVE, title, author, publish time, origin</li>
             <li>Which key aspects are available for each report</li>
           </ul>
           <h3 style="margin-top:22px">Responsible use</h3>
@@ -361,10 +361,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611222023"></script>
-<script src="assets/common.js?v=202611222023"></script>
-<script src="assets/charts.js?v=202611222023"></script>
-<script src="data/stats.js?v=202611222023"></script>
+<script src="assets/config.js?v=202611222024"></script>
+<script src="assets/common.js?v=202611222024"></script>
+<script src="assets/charts.js?v=202611222024"></script>
+<script src="data/stats.js?v=202611222024"></script>
 <script>
   // 首屏数字随导出的数据版本自动更新
   (function () {
