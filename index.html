@@ -48,10 +48,16 @@
         <a class="btn" href="#access">Request full records</a>
       </div>
       <div class="kpis" role="list">
-        <div class="kpi" role="listitem"><div class="v">13</div><div class="l">public PoC platforms unified into one schema</div></div>
-        <div class="kpi" role="listitem"><div class="v">86,595</div><div class="l">PoC reports enhanced by multi-source fusion <span class="cite">TIFS'26</span></div></div>
-        <div class="kpi hl" role="listitem"><div class="v">96.3%</div><div class="l">PoC–CVE link recovery, Recall@10 <span class="cite">RESYNC</span></div></div>
-        <div class="kpi hl" role="listitem"><div class="v">91.3%</div><div class="l">correctness of multi-source aspect completion <span class="cite">TIFS'26</span></div></div>
+        <div class="kpi" role="listitem"><div class="v" data-stat="total_records">289,065</div><div class="l">PoC reports from public platforms</div></div>
+        <div class="kpi" role="listitem"><div class="v" data-stat="unique_cves">61,426</div><div class="l">CVEs with at least one public PoC</div></div>
+        <div class="kpi hl" role="listitem"><div class="v" data-stat="records_without_cve">173,714</div><div class="l">PoCs without a CVE ID — invisible to CVE-indexed datasets</div></div>
+        <div class="kpi hl" role="listitem"><div class="v" data-stat="cves_beyond_edb_github">25,819</div><div class="l">CVEs whose PoCs are in neither Exploit-DB nor PoC-in-GitHub</div></div>
+      </div>
+      <p class="release" id="release">Release v2026.11 · 11 of 13 platforms exported · Red Hat Bugzilla and Chromium being added</p>
+      <div class="highlights">
+        <div><b>86,595</b> reports enhanced by multi-source fusion <span class="cite">TIFS'26</span></div>
+        <div><b>96.3%</b> PoC–CVE link recovery, Recall@10 <span class="cite">RESYNC</span></div>
+        <div><b>91.3%</b> correctness of aspect completion <span class="cite">TIFS'26</span></div>
       </div>
     </div>
   </section>
@@ -267,6 +273,19 @@
 
 <script src="assets/config.js"></script>
 <script src="assets/common.js"></script>
+<script src="data/stats.js"></script>
+<script>
+  // 首屏数字随导出的数据版本自动更新
+  (function () {
+    var S = window.CS_STATS; if (!S) return;
+    document.querySelectorAll("[data-stat]").forEach(function (el) {
+      var v = S[el.dataset.stat]; if (typeof v === "number") el.textContent = v.toLocaleString("en-US");
+    });
+    var pending = (S.per_source || []).filter(function (p) { return !p.records; }).map(function (p) { return p.label; });
+    document.getElementById("release").textContent = "Release " + S.version + " · " + S.sources_active + " of " + S.sources_total +
+      " platforms exported" + (pending.length ? " · " + pending.join(" and ") + " being added" : "");
+  })();
+</script>
 <script>
   (function () {
     var C = window.CS_CONFIG;
