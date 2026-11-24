@@ -22,7 +22,8 @@
 
 - **20 PoC references added to official CVE records** (15 recovered PoC–CVE links, 5 completed PoC reports)
 - **NVD affected-version ranges corrected** (e.g., Neovim added to CVE-2021-4019)
-- **2 incomplete security fixes confirmed** by maintainers (AVideo GitHub security advisories)
+- **122 incomplete security fixes confirmed**, including two in AVideo acknowledged in GitHub security advisories
+- **2 new CVE IDs assigned**: CVE-2024-33292, CVE-2026-62263
 
 ## Data access
 
