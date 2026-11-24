@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611250204">
+  <link rel="stylesheet" href="assets/style.css?v=202611250208">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -87,7 +87,7 @@
         </div>
         <div class="panel-foot">
           <span class="hint">Aspects in this release are derived from report content by rules. The full release replaces them with LLM-extracted, multi-source-completed aspects.</span>
-          <button class="btn" type="button" id="reset">Reset</button>
+          <button class="btn" type="button" id="resetBtn">Reset</button>
         </div>
       </div>
     </form>
@@ -131,10 +131,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611250204"></script>
-<script src="assets/common.js?v=202611250204"></script>
-<script>window.CS_BUILD = "202611250204";</script>
-<script src="data/meta.js?v=202611250204"></script>
+<script src="assets/config.js?v=202611250208"></script>
+<script src="assets/common.js?v=202611250208"></script>
+<script>window.CS_BUILD = "202611250208";</script>
+<script src="data/meta.js?v=202611250208"></script>
 <script>
 (function () {
   var M = window.CS_META, PAGE = 30, $ = function (id) { return document.getElementById(id); };
@@ -387,7 +387,7 @@
       '<div class="det-act"><button type="button" class="btn sm" id="bk-add">' + (inB ? "✓ In request list" : "+ Add to request list") + '</button><a class="btn sm primary" href="' + mail +
       '">Request this record →</a><span class="fine">Full PoC code, steps and attachments are shared with researchers on request.</span></div>';
     $("bk-add").onclick = function () { toggleBasket(r.id); this.textContent = BASKET.indexOf(r.id) >= 0 ? "✓ In request list" : "+ Add to request list"; };
-    el.querySelectorAll(".tocve").forEach(function (a) { a.onclick = function (e) { e.preventDefault(); $("f").reset(); $("y0").value = 1995; $("y1").value = Y; $("a_cve").value = a.dataset.c; run(); }; });
+    el.querySelectorAll(".tocve").forEach(function (a) { a.onclick = function (e) { e.preventDefault(); clearForm(); $("a_cve").value = a.dataset.c; run(); scrollTo(0, $("meta").offsetTop - 80); }; });
   }
 
   // ---------------------------------------------------------------- request list
@@ -421,7 +421,9 @@
   ["a_prod", "a_ver", "a_cve", "a_author", "q"].forEach(function (id) { $(id).addEventListener("input", later); });
   ["a_plat", "a_lang", "a_type", "a_hascve", "y0", "y1", "sort"].forEach(function (id) { $(id).addEventListener("change", run); });
   document.querySelectorAll(".aspect-panel input[type=checkbox]").forEach(function (c) { c.addEventListener("change", run); });
-  $("reset").addEventListener("click", function () { $("f").reset(); $("y0").value = 1995; $("y1").value = Y; run(); });
+  // 注意：表单里不能有 id/name 为 "reset" 的元素，否则会遮住 form.reset()（之前 Reset 按钮和 "Show all" 因此失效）
+  function clearForm() { HTMLFormElement.prototype.reset.call($("f")); $("y0").value = 1995; $("y1").value = Y; }
+  $("resetBtn").addEventListener("click", function () { clearForm(); run(); });
   var p = new URLSearchParams(location.search); ["q", "a_prod", "a_ver", "a_cve", "a_author"].forEach(function (k) { if (p.get(k)) $(k).value = p.get(k); });
   // ?id=CS-XXXXXXXX：直接打开某条记录的详情（可用于分享链接）
   var wantId = (p.get("id") || "").replace(/^cs-/i, "").toUpperCase();
