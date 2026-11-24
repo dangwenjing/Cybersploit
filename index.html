@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611241501">
+  <link rel="stylesheet" href="assets/style.css?v=202611242346">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -126,9 +126,15 @@
       <div class="table-wrap">
         <table class="compare" id="compare-table">
           <thead>
+            <tr class="grp">
+              <th rowspan="2">Resource</th><th colspan="4">Coverage</th><th colspan="2">PoC content</th>
+              <th colspan="3">Enhancement</th><th colspan="2">Availability</th>
+            </tr>
             <tr>
-              <th>Resource</th><th>Sources</th><th>PoCs without CVE</th><th>Key-aspect structure</th>
-              <th>Multi-source completion</th><th>PoC–CVE link recovery</th>
+              <th>Sources</th><th>Scale</th><th>PoCs without CVE</th><th>Free-text PoCs</th>
+              <th>Full PoC</th><th>Verified</th>
+              <th>Key-aspect structure</th><th>Multi-source completion</th><th>PoC–CVE link recovery</th>
+              <th>Access</th><th>Updated</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -363,10 +369,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611241501"></script>
-<script src="assets/common.js?v=202611241501"></script>
-<script src="assets/charts.js?v=202611241501"></script>
-<script src="data/stats.js?v=202611241501"></script>
+<script src="assets/config.js?v=202611242346"></script>
+<script src="assets/common.js?v=202611242346"></script>
+<script src="assets/charts.js?v=202611242346"></script>
+<script src="data/stats.js?v=202611242346"></script>
 <script>
   // 首屏数字随导出的数据版本自动更新
   (function () {
@@ -422,16 +428,24 @@
 <script>
   (function () {
     var C = window.CS_CONFIG;
-    var mark = { yes: '<span class="yes">Yes</span>', no: '<span class="no">No</span>', part: '<span class="part">Partial</span>' };
+    var mark = { yes: '<span class="yes">Yes</span>', no: '<span class="no">No</span>', part: '<span class="part">Partial</span>',
+                 links: '<span class="part lk">Links only</span>' };
     var cell = function (v) { return mark[v] || CS.esc(v); };
-    var rows = C.compare.map(function (r) {
-      return "<tr><td>" + CS.esc(r.name) + "</td><td>" + CS.esc(r.scope) + "</td><td>" + cell(r.nonCve) + "</td><td>" + cell(r.aspects) +
-        "</td><td>" + cell(r.completion) + "</td><td>" + cell(r.linking) + "</td></tr>";
-    });
-    rows.unshift('<tr class="ours"><td>CyberSploit</td><td>Multi-source, expanding</td><td>' + mark.yes + "</td><td>" + mark.yes + "</td><td>" + mark.yes +
-      "</td><td>" + mark.yes + "</td></tr>");
-    document.querySelector("#compare-table tbody").innerHTML = rows.join("");
-    document.getElementById("compare-note").textContent = "Comparison as of " + C.compareAsOf + ".";
+    var COLS = ["scope", "scale", "nonCve", "text", "content", "verified", "aspects", "completion", "linking", "access", "updated"];
+    var row = function (r, cls) {
+      return "<tr" + (cls ? ' class="' + cls + '"' : "") + "><td>" + CS.esc(r.name) + "</td>" + COLS.map(function (k, i) {
+        return '<td class="c-' + k + '">' + (i < 2 || k === "access" ? CS.esc(r[k]) : cell(r[k])) + "</td>";
+      }).join("") + "</tr>";
+    };
+    var S = window.CS_STATS || {};
+    var ours = { name: "CyberSploit", scope: (S.sources_active || 13) + " sources",
+      scale: S.total_records ? Math.floor(S.total_records / 1000) + "K+" : "—",
+      nonCve: "yes", text: "yes", content: "yes", verified: "part", aspects: "yes", completion: "yes", linking: "yes",
+      access: "On request", updated: "yes" };
+    document.querySelector("#compare-table tbody").innerHTML = [row(ours, "ours")].concat(C.compare.map(function (r) { return row(r); })).join("");
+    document.getElementById("compare-note").textContent = "✓ Yes · ◐ Partial · — No. Free-text PoCs: reproduction steps or prose, not only code. " +
+      "Full PoC: the PoC itself is included, not just a link to it. Verified: reproducibility checked (Partial = reviewed, flagged or ranked, not systematically reproduced). " +
+      "Comparison as of " + C.compareAsOf + ", based on each resource's public documentation.";
 
     document.getElementById("pubs").innerHTML = C.publications.map(function (p) {
       var doi = p.doi ? ' · <a href="https://doi.org/' + CS.esc(p.doi) + '" target="_blank" rel="noopener">DOI</a>' : "";

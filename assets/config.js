@@ -113,12 +113,31 @@ window.CS_CONFIG = {
   // 参与方式
   issuesUrl: "https://github.com/dangwenjing/Cybersploit/issues",
 
-  // 与现有数据集的对比（其他数据集的信息请核实；值：yes / no / part / 文本）
+  // 与现有数据集的对比（其他数据集的信息请核实；值：yes / no / part / links / 文本）
+  // 维度：scope 来源，scale 规模，nonCve 收录无 CVE 的 PoC，text 文字步骤类 PoC（不只代码），
+  //       content 含完整 PoC（links = 只有链接），verified 可复现性已验证，aspects 关键要素结构化，
+  //       completion 多源补全，linking PoC–CVE 关联恢复，access 获取方式，updated 持续更新
   compareAsOf: "November 2026",
   compare: [
-    { name: "Exploit-DB", scope: "1 (curated exploits)", nonCve: "yes", aspects: "no", completion: "no", linking: "no", verified: "part", updated: "yes" },
-    { name: "PoC-in-GitHub", scope: "1 (GitHub repositories)", nonCve: "no", aspects: "no", completion: "no", linking: "no", verified: "no", updated: "yes" },
-    { name: "trickest/cve", scope: "GitHub + CVE references (links)", nonCve: "no", aspects: "no", completion: "no", linking: "no", verified: "no", updated: "yes" },
-    { name: "ARVO", scope: "1 (OSS-Fuzz)", nonCve: "yes", aspects: "no", completion: "no", linking: "no", verified: "yes", updated: "part" },
+    { name: "Exploit-DB", scope: "Curated exploit archive", scale: "46K+", nonCve: "yes", text: "part", content: "yes", verified: "part",
+      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
+    { name: "Packet Storm", scope: "Security file archive", scale: "—", nonCve: "yes", text: "yes", content: "yes", verified: "no",
+      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
+    { name: "Metasploit", scope: "Exploit modules", scale: "2.5K+", nonCve: "part", text: "no", content: "yes", verified: "part",
+      aspects: "part", completion: "no", linking: "no", access: "Open", updated: "yes" },
+    { name: "Nuclei Templates", scope: "Detection templates", scale: "—", nonCve: "yes", text: "no", content: "yes", verified: "part",
+      aspects: "part", completion: "no", linking: "no", access: "Open", updated: "yes" },
+    { name: "PoC-in-GitHub", scope: "GitHub repositories", scale: "12K+ CVEs", nonCve: "no", text: "no", content: "links", verified: "no",
+      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
+    { name: "trickest/cve", scope: "GitHub + CVE references", scale: "—", nonCve: "no", text: "no", content: "links", verified: "no",
+      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
+    { name: "Vulners", scope: "Aggregator", scale: "—", nonCve: "yes", text: "part", content: "yes", verified: "no",
+      aspects: "no", completion: "no", linking: "no", access: "Commercial", updated: "yes" },
+    { name: "Sploitus", scope: "Exploit search engine", scale: "—", nonCve: "yes", text: "part", content: "yes", verified: "no",
+      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
+    { name: "ARVO", scope: "OSS-Fuzz crashes", scale: "5K+", nonCve: "yes", text: "no", content: "yes", verified: "yes",
+      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "part" },
+    { name: "Vul4J", scope: "Java projects", scale: "79", nonCve: "part", text: "no", content: "yes", verified: "yes",
+      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "no" },
   ],
 };
