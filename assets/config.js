@@ -110,6 +110,23 @@ window.CS_CONFIG = {
     },
   ],
 
+  // PoC 领域论文综述（团队维护的 PoC-Research-Papers 列表；数字按 2026-11-25 的 README 统计，更新列表后改这里）
+  survey: {
+    url: "https://marklee131.github.io/PoC-Research-Papers/",
+    repo: "https://github.com/MarkLee131/PoC-Research-Papers",
+    papers: 64, published: 57, preprints: 7, span: "2008–2026",
+    venues: ["S&P", "CCS", "USENIX Security", "NDSS", "ICSE", "FSE", "ISSTA", "ASE", "TOSEM", "TDSC", "PLDI", "ICPC", "KDD"],
+    // 每年篇数（不含预印本）
+    years: [["≤'16", 3], ["'17", 1], ["'18", 4], ["'19", 3], ["'20", 1], ["'21", 5], ["'22", 3], ["'23", 3], ["'24", 4], ["'25", 7], ["'26", 23]],
+    themes: [
+      { name: "PoC generation", topics: [["Fuzzing-based", 8], ["Symbolic execution", 8], ["LLM & agent-based", 8],
+                                         ["Program analysis", 5], ["Heap layout & exploit primitives", 2]] },
+      { name: "PoC applications", topics: [["PoC migration & transformation", 7], ["Exploitability assessment", 6],
+                                           ["Patch validation & repair", 2], ["Bug reproduction", 1]] },
+      { name: "Empirical studies", topics: [["Exploit reproducibility", 2], ["Community & exploit landscape", 2]] },
+    ],
+  },
+
   // 参与方式
   issuesUrl: "https://github.com/dangwenjing/Cybersploit/issues",
 

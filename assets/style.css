@@ -431,3 +431,32 @@ footer .wrap { display: flex; gap: 24px; flex-wrap: wrap; justify-content: space
 .basket .bk-a { display: flex; gap: 8px; }
 .basket[hidden], .insights[hidden] { display: none; }
 .results td.num { white-space: nowrap; }
+
+/* ---------- PoC research survey card ---------- */
+.survey { display: grid; grid-template-columns: 1.25fr 1fr 1.15fr; gap: 28px; align-items: start; }
+@media (max-width: 1000px) { .survey { grid-template-columns: 1fr; } }
+.survey .sv-lead { margin: 0; color: var(--text-2); font-size: 14.5px; }
+.survey .sv-lead b { color: var(--text); }
+.survey .sv-stats { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 6px 20px; margin-top: 16px; }
+.survey .sv-stats b { display: block; white-space: nowrap; font-size: 21px; font-weight: 680; letter-spacing: -0.02em; color: var(--text); line-height: 1.2; }
+.survey .sv-stats span { color: var(--muted); font-size: 12px; }
+.survey .sv-venues { color: var(--muted); font: 500 11.5px var(--mono); margin: 12px 0 0; line-height: 1.7; }
+.survey .sv-act { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.survey .sv-h { font: 600 11.5px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); margin-bottom: 10px; }
+.survey .sv-cols { display: flex; align-items: flex-end; gap: 4px; height: 150px; }
+.survey .sv-col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; min-width: 0; }
+.survey .sv-col i { display: block; width: 100%; max-width: 24px; background: color-mix(in srgb, var(--accent) 45%, var(--surface-2)); border-radius: 3px 3px 0 0; min-height: 2px; }
+.survey .sv-col.hot i { background: var(--accent); }
+.survey .sv-col em { font: normal 500 10.5px var(--mono); color: var(--muted); margin-bottom: 3px; }
+.survey .sv-col.hot em { color: var(--accent); font-weight: 600; }
+.survey .sv-col span { font: 500 10px var(--mono); color: var(--muted); margin-top: 4px; white-space: nowrap; }
+.survey .sv-note { font-size: 13px; color: var(--text-2); margin: 12px 0 0; }
+.survey .sv-note b { color: var(--text); }
+.survey .sv-theme + .sv-theme { margin-top: 12px; }
+.survey .sv-tn { font-weight: 600; font-size: 13.5px; color: var(--text); margin-bottom: 4px; }
+.survey .sv-tn em { font: normal 500 11.5px var(--mono); color: var(--accent); margin-left: 4px; }
+.survey .sv-tp { display: grid; grid-template-columns: minmax(0, 1fr) 70px 20px; gap: 8px; align-items: center; font-size: 12.5px; color: var(--text-2); padding: 1px 0; }
+.survey .sv-tp span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.survey .sv-tp i { height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+.survey .sv-tp i b { display: block; height: 100%; background: color-mix(in srgb, var(--accent) 70%, transparent); border-radius: 3px; }
+.survey .sv-tp em { font: normal 500 11.5px var(--mono); color: var(--muted); text-align: right; }

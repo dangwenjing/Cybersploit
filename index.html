@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611250208">
+  <link rel="stylesheet" href="assets/style.css?v=202611250218">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -288,6 +288,8 @@
         <p class="lead"><b>We are actively seeking research collaborators.</b> If you work on vulnerability PoCs — linking, completion, validation, migration or trustworthiness — and would like to build on CyberSploit or co-author a study, <a href="#involved">get in touch</a>.</p>
       </div>
       <div class="card pubs" id="pubs"></div>
+      <h3 style="margin:32px 0 12px">Survey: the PoC research landscape</h3>
+      <div class="card survey" id="survey"></div>
       <h3 style="margin:32px 0 12px">Patents &amp; software copyrights</h3>
       <div class="card pubs" id="ip"></div>
       <h3 style="margin:32px 0 12px">Ongoing work &amp; research directions</h3>
@@ -368,10 +370,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611250208"></script>
-<script src="assets/common.js?v=202611250208"></script>
-<script src="assets/charts.js?v=202611250208"></script>
-<script src="data/stats.js?v=202611250208"></script>
+<script src="assets/config.js?v=202611250218"></script>
+<script src="assets/common.js?v=202611250218"></script>
+<script src="assets/charts.js?v=202611250218"></script>
+<script src="data/stats.js?v=202611250218"></script>
 <script>
   // 首屏数字随导出的数据版本自动更新
   (function () {
@@ -450,6 +452,33 @@
       return '<div class="pub"><div class="venue">' + CS.esc(p.tag) + '</div><div><div class="t">' + CS.esc(p.title) +
         '</div><div class="a">' + CS.esc(p.authors) + '</div><div class="s">' + CS.esc(p.venue) + doi + "</div></div></div>";
     }).join("");
+    // ---- PoC 论文综述卡片
+    var SV = C.survey;
+    if (SV) {
+      var ymax = Math.max.apply(null, SV.years.map(function (y) { return y[1]; }));
+      var last = SV.years[SV.years.length - 1];
+      var llm = 0; SV.themes.forEach(function (t) { t.topics.forEach(function (x) { if (/LLM/.test(x[0])) llm = x[1]; }); });
+      document.getElementById("survey").innerHTML =
+        '<div class="sv-intro"><p class="sv-lead">We maintain <b>PoC Research Papers</b>, a curated and continuously updated map of research on vulnerability proof-of-concepts — from automated exploit generation to empirical studies and PoC-driven applications such as exploitability assessment, patch validation and migration.</p>' +
+        '<div class="sv-stats"><div><b>' + SV.papers + '</b><span>papers</span></div><div><b>' + CS.esc(SV.span) + '</b><span>time span</span></div><div><b>' +
+        SV.venues.length + '</b><span>top venues</span></div><div><b>' + SV.themes.reduce(function (a, t) { return a + t.topics.length; }, 0) + '</b><span>research topics</span></div></div>' +
+        '<p class="sv-venues">' + SV.venues.map(CS.esc).join(" · ") + '</p>' +
+        '<div class="sv-act"><a class="btn primary" href="' + CS.esc(SV.url) + '" target="_blank" rel="noopener">Browse the survey →</a><a class="btn" href="' + CS.esc(SV.repo) +
+        '" target="_blank" rel="noopener">GitHub</a></div></div>' +
+        '<div class="sv-years"><div class="sv-h">Papers per year</div><div class="sv-cols" role="img" aria-label="Papers per year">' +
+        SV.years.map(function (y, i) {
+          return '<div class="sv-col' + (i === SV.years.length - 1 ? " hot" : "") + '" title="' + CS.esc(y[0]) + ": " + y[1] + ' papers"><em>' + y[1] + '</em><i style="height:' +
+            (100 * y[1] / ymax).toFixed(1) + '%"></i><span>' + CS.esc(y[0]) + "</span></div>";
+        }).join("") + '</div><p class="sv-note"><b>' + last[1] + " papers in 20" + last[0].replace("'", "") + " alone</b>" +
+        (llm ? " — all " + llm + " LLM- and agent-based PoC generation papers appeared this year." : ".") + "</p></div>" +
+        '<div class="sv-tax"><div class="sv-h">Topics</div>' + SV.themes.map(function (t) {
+          var n = t.topics.reduce(function (a, x) { return a + x[1]; }, 0), mx = Math.max.apply(null, t.topics.map(function (x) { return x[1]; }));
+          return '<div class="sv-theme"><div class="sv-tn">' + CS.esc(t.name) + " <em>" + n + "</em></div>" + t.topics.map(function (x) {
+            return '<div class="sv-tp"><span>' + CS.esc(x[0]) + '</span><i><b style="width:' + (100 * x[1] / mx).toFixed(0) + '%"></b></i><em>' + x[1] + "</em></div>";
+          }).join("") + "</div>";
+        }).join("") + "</div>";
+    }
+
     document.getElementById("ongoing").innerHTML = C.ongoing.map(function (p) {
       var st = p.status === "open" ? '<span class="st open">Open direction · collaboration welcome</span>'
         : p.status === "review" ? '<span class="st prog">Under review</span>' : '<span class="st prog">In progress</span>';
