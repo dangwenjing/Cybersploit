@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611250000">
+  <link rel="stylesheet" href="assets/style.css?v=202611250204">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -32,12 +32,25 @@
   <div class="search-hero">
     <p class="eyebrow">Aspect-level search</p>
     <h2>Find PoCs by what they target, not just by CVE</h2>
-    <p class="lead">Combine key aspects — affected component, version, platform, PoC form, vulnerability type, author, time — to locate PoC reports across the whole dataset, including those without a CVE ID.</p>
+    <p class="lead">Search <b id="h-total">hundreds of thousands of</b> PoC reports by key aspects — component, version, platform, PoC form, vulnerability type, time — including PoCs that have no CVE ID. Open any report to see its PoC profile, key-aspect coverage and cross-source corroboration.</p>
 
     <form id="f" role="search" autocomplete="off">
       <div class="searchbar">
-        <input class="input" id="q" type="search" placeholder="Keyword, CVE ID or component — e.g. log4j, CVE-2021-44228, WordPress" aria-label="Keyword">
+        <input class="input" id="q" type="search" placeholder="Keyword, CVE ID, component or record ID — e.g. log4j, CVE-2021-44228, WordPress" aria-label="Keyword">
         <button class="btn primary" type="submit" style="height:44px">Search</button>
+      </div>
+      <div class="quick" id="quick">
+        <span class="ql">Explore</span>
+        <button type="button" class="qchip" data-q="kev">Known exploited (KEV)</button>
+        <button type="button" class="qchip" data-q="complete">Complete PoCs</button>
+        <button type="button" class="qchip" data-q="multi">Corroborated by 2+ sources</button>
+        <button type="button" class="qchip" data-q="nocve">Without CVE ID</button>
+        <button type="button" class="qchip" data-q="recent">This year</button>
+        <span class="ql">Try</span>
+        <button type="button" class="qchip ex" data-ex="log4j">log4j</button>
+        <button type="button" class="qchip ex" data-ex="CVE-2021-44228">CVE-2021-44228</button>
+        <button type="button" class="qchip ex" data-ex="WordPress">WordPress</button>
+        <button type="button" class="qchip ex" data-ex="nf_tables">nf_tables</button>
       </div>
 
       <div class="aspect-panel card">
@@ -53,95 +66,155 @@
           <label class="field"><span>Vulnerability type</span><select id="a_type"><option value="">Any type</option></select></label>
           <label class="field"><span>CVE</span><input class="input" id="a_cve" placeholder="CVE-2021-44228 or 2021-"></label>
           <label class="field"><span>CVE linkage</span><select id="a_hascve"><option value="">Any</option><option value="1">With CVE ID</option><option value="0">Without CVE ID</option></select></label>
+          <label class="check"><input type="checkbox" id="f_kev"> Known exploited (CISA KEV)</label>
         </div>
         <div class="aspect-group">
-          <div class="group-title">Provenance</div>
+          <div class="group-title">Provenance &amp; quality</div>
           <label class="field"><span>Author</span><input class="input" id="a_author" placeholder="Name or handle"></label>
           <label class="field"><span>Publish time</span><span class="range"><select id="y0"></select><em>–</em><select id="y1"></select></span></label>
-          <label class="field"><span>Origin</span><select id="a_src"><option value="">Any origin</option></select></label>
+          <label class="check"><input type="checkbox" id="f_comp"> Complete PoC only</label>
+          <label class="check"><input type="checkbox" id="f_multi"> Corroborated by 2+ sources</label>
         </div>
-        <div class="aspect-group future">
-          <div class="group-title">Exploit details <span class="soon-tag">full release</span></div>
-          <label class="check"><input type="checkbox" disabled> Has trigger steps</label>
-          <label class="check"><input type="checkbox" disabled> Has verification oracle</label>
-          <label class="check"><input type="checkbox" disabled> Has reference links</label>
-          <label class="field"><span>Key function</span><input class="input" disabled placeholder="e.g. ck.php, nf_tables"></label>
+        <div class="aspect-group">
+          <div class="group-title">Exploit details</div>
+          <label class="check"><input type="checkbox" id="x_a0"> Has trigger steps</label>
+          <label class="check"><input type="checkbox" id="x_a1"> Has verification oracle</label>
+          <label class="check"><input type="checkbox" id="x_a7"> Has reference links</label>
+          <label class="check"><input type="checkbox" id="x_f2"> Includes HTTP request</label>
+          <label class="check"><input type="checkbox" id="x_f3"> Includes payload</label>
+          <label class="check"><input type="checkbox" id="x_f6"> Includes crash trace</label>
+          <label class="check"><input type="checkbox" id="x_f4"> Has attachments</label>
         </div>
         <div class="panel-foot">
-          <span class="hint">Aspects in this preview are derived from source metadata and titles. The full release replaces them with LLM-extracted, multi-source-completed aspects.</span>
+          <span class="hint">Aspects in this release are derived from report content by rules. The full release replaces them with LLM-extracted, multi-source-completed aspects.</span>
           <button class="btn" type="button" id="reset">Reset</button>
         </div>
       </div>
     </form>
   </div>
 
-  <div class="result-meta"><span id="meta">Loading index…</span><span id="load">Sorted by aspect completeness, then year</span></div>
+  <div class="insights" id="insights" hidden>
+    <div class="card ins wide"><div class="ins-h">By publish year <span id="ins-yr-n"></span></div><div class="cols" id="ins-years"></div></div>
+    <div class="card ins"><div class="ins-h">Vulnerability types</div><div id="ins-types"></div></div>
+    <div class="card ins"><div class="ins-h">PoC form</div><div id="ins-forms"></div></div>
+    <div class="card ins"><div class="ins-h">Top components</div><div class="tops" id="ins-prods"></div></div>
+  </div>
+
+  <div class="result-meta">
+    <span id="meta">Loading index…</span>
+    <span class="rm-r"><span id="load"></span>
+      <label class="sortl">Sort <select id="sort"><option value="best">Best match</option><option value="new">Newest</option><option value="src">Most corroborated</option></select></label>
+    </span>
+  </div>
   <div class="table-wrap">
     <table class="results">
-      <colgroup><col style="width:38%"><col style="width:19%"><col style="width:12%"><col style="width:15%"><col style="width:10%"><col style="width:6%"></colgroup>
+      <colgroup><col style="width:39%"><col style="width:18%"><col style="width:12%"><col style="width:15%"><col style="width:9%"><col style="width:7%"></colgroup>
       <thead><tr><th>Report</th><th>Component · Version</th><th>Platform</th><th>Type</th><th>Author</th><th class="num">Year</th></tr></thead>
       <tbody id="rows"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody>
     </table>
   </div>
   <div class="pager" id="pager"></div>
+  <p class="footnote">Search results show public metadata only. Full PoC code, trigger steps, verification oracles and attachments are shared with researchers on request — add records to your request list and send it in one email.</p>
 </main>
+
+<div class="basket" id="basket" hidden>
+  <div class="wrap">
+    <span><b id="bk-n">0</b> records in your request list</span>
+    <span class="bk-a"><button class="btn sm" type="button" id="bk-clear">Clear</button><a class="btn sm primary" id="bk-send" href="#">Request these records →</a></span>
+  </div>
+</div>
 
 <footer>
   <div class="wrap">
     <div>© CyberSploit. For research and defensive use.</div>
-    <div><a href="index.html#publications">Cite</a> · <a href="index.html#access">Contact</a></div>
+    <div><a href="index.html#publications">Publications</a> · <a href="index.html#access">Contact</a></div>
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611250000"></script>
-<script src="assets/common.js?v=202611250000"></script>
-<script>window.CS_BUILD = "202611250000";</script>
-<script src="data/meta.js?v=202611250000"></script>
+<script src="assets/config.js?v=202611250204"></script>
+<script src="assets/common.js?v=202611250204"></script>
+<script>window.CS_BUILD = "202611250204";</script>
+<script src="data/meta.js?v=202611250204"></script>
 <script>
 (function () {
-  var M = window.CS_META, PAGE = 40, $ = function (id) { return document.getElementById(id); };
-  var ALL = [], loaded = 0, hits = [], page = 0;
+  var M = window.CS_META, PAGE = 30, $ = function (id) { return document.getElementById(id); };
+  var ALL = [], loaded = 0, hits = [], page = 0, NOCVE = 0, Y = new Date().getFullYear();
+  var esc = CS.esc, fmt = function (n) { return n.toLocaleString("en-US"); };
+  var ASP = M.aspects, FE = M.feats;
 
-  // ---- populate selects
-  function opt(sel, v, t) { var o = document.createElement("option"); o.value = v; o.textContent = t; sel.appendChild(o); }
+  // ---------------------------------------------------------------- selects
+  function opt(sel, v, t) { var o = document.createElement("option"); o.value = v; o.textContent = t; o.dataset.t = t; sel.appendChild(o); }
   M.platforms.forEach(function (p, i) { opt($("a_plat"), i, p); });
   M.vtypes.forEach(function (p, i) { opt($("a_type"), i, p); });
   (M.langs || []).forEach(function (p, i) { opt($("a_lang"), i, "Code — " + p); });
-  M.shards.forEach(function (s) { opt($("a_src"), s.src, M.sources[s.src]); });
-  var Y = new Date().getFullYear();
   for (var y = Y; y >= 1995; y--) { opt($("y0"), y, y); opt($("y1"), y, y); }
   $("y0").value = 1995; $("y1").value = Y;
+  if (M.total) $("h-total").textContent = fmt(Math.floor(M.total / 1000) * 1000) + "+";
 
-  // ---- load shards (each file calls CS_SHARD)
-  window.CS_SHARD = function (d) {
-    var P = d.products, A = d.authors;
+  // ---------------------------------------------------------------- index
+  function pop(x) { var n = 0; while (x) { n += x & 1; x >>= 1; } return n; }
+  // 索引里的标题 / 组件 / 作者是 ROT13（避免杀毒软件对 PHP 函数名的启发式误报）；检索时查询词也转 ROT13 再比较
+  var ENC = M.enc === "rot13";
+  function rot(s) { return ENC ? s.replace(/[a-zA-Z]/g, function (c) { var x = c.charCodeAt(0), b = x < 97 ? 65 : 97; return String.fromCharCode((x - b + 13) % 26 + b); }) : s; }
+  function T(o) { return o._t !== undefined ? o._t : (o._t = rot(o.te)); }
+  window.CS_IDX = function (d) {
+    var P = d.products.map(rot), A = d.authors.map(rot);
     d.rows.forEach(function (r) {
-      var prod = r[3] >= 0 ? P[r[3]] : "", auth = r[7] >= 0 ? A[r[7]] : "";
-      ALL.push({ s: d.src, t: r[0], c: r[1], y: r[2], p: prod, v: r[4], pl: r[5], ty: r[6], a: auth, id: r[8],
-                 lg: r.length > 9 ? r[9] : -1, hay: (r[0] + " " + r[1] + " " + prod).toLowerCase(), pl_: prod.toLowerCase(), a_: auth.toLowerCase() });
+      var prod = r[4] >= 0 ? P[r[4]] : "", auth = r[8] >= 0 ? A[r[8]] : "", fl = r[11];
+      var o = { id: r[0], te: r[1], c: r[2], y: r[3], p: prod, v: r[5], pl: r[6], ty: r[7], a: auth, lg: r[9], f: r[10],
+                cm: fl & 1, kev: fl >> 1 & 1, ns: fl >> 2 & 7, as: r[12] };
+      o.na = pop(o.as);
+      o.k = o.cm * 6 + o.kev * 3 + Math.min(o.ns, 4) * 2 + o.na + (o.lg >= 0 ? 1 : 0);
+      o.hay = (r[1] + " " + rot(r[2] + " " + prod + " cs-" + r[0])).toLowerCase(); o.p_ = prod.toLowerCase(); o.a_ = auth.toLowerCase();
+      if (!o.c) NOCVE++;
+      ALL.push(o);
     });
-    loaded++;
-    $("load").textContent = loaded < M.shards.length ? "Loading sources " + loaded + "/" + M.shards.length + "…" : "";
-    if (loaded === M.shards.length) {
-      // 默认排序：aspect 越完整越靠前，其次按年份
-      ALL.forEach(function (r) { r.k = (r.p ? 2 : 0) + (r.v ? 1 : 0) + (r.pl ? 1 : 0) + (r.ty ? 1 : 0) + (r.c ? 1 : 0) + (r.a ? 1 : 0); });
-      ALL.sort(function (a, b) { return b.k - a.k || b.y - a.y; });
-      run();
-    }
-    else if (loaded % 3 === 0) run();
+    chunkDone();
   };
-  M.shards.forEach(function (s) { var e = document.createElement("script"); e.src = "data/" + s.file + "?v=" + (window.CS_BUILD || ""); e.async = true; document.body.appendChild(e); });
+  function chunkDone() {
+    loaded++;
+    $("load").textContent = loaded < M.chunks.length ? "Loading index " + loaded + "/" + M.chunks.length + "… " : "";
+    if (loaded === M.chunks.length) { ALL.sort(function (a, b) { return b.k - a.k || b.y - a.y; }); CVEMAP = null; run(); }
+    else if (loaded % 4 === 0) run();
+  }
+  M.chunks.forEach(function (s) { var e = document.createElement("script"); e.src = "data/" + s.file + "?v=" + (window.CS_BUILD || ""); e.async = true; e.onerror = chunkDone; document.body.appendChild(e); });
 
-  // ---- search
+  // ---------------------------------------------------------------- lazy detail / CVE chunks
+  var CACHE = {}, WAIT = {};
+  function loadChunk(path, cb) {
+    if (CACHE[path]) return cb(CACHE[path]);
+    if (WAIT[path]) return WAIT[path].push(cb);
+    WAIT[path] = [cb];
+    var e = document.createElement("script"); e.src = "data/" + path + ".js?v=" + (window.CS_BUILD || ""); e.async = true;
+    e.onerror = function () { CACHE[path] = {}; (WAIT[path] || []).forEach(function (f) { f({}); }); delete WAIT[path]; };
+    document.body.appendChild(e);
+  }
+  function got(path, d) { CACHE[path] = d; (WAIT[path] || []).forEach(function (f) { f(d); }); delete WAIT[path]; }
+  window.CS_DET = function (o) { got("det/" + o.k, o.d); };
+  window.CS_CVE = function (o) { got("cve/" + o.k, o.d); };
+
+  // ---------------------------------------------------------------- search
   function val(id) { return $(id).value.trim().toLowerCase(); }
+  function chk(id) { return $(id).checked; }
+  function filtersActive() {
+    return !!(val("q") || val("a_prod") || val("a_ver") || val("a_cve") || val("a_author") || $("a_plat").value || $("a_type").value ||
+      $("a_lang").value || $("a_hascve").value || +$("y0").value !== 1995 || +$("y1").value !== Y ||
+      document.querySelectorAll(".aspect-panel input[type=checkbox]:checked").length);
+  }
   function run() {
-    var terms = val("q").split(/\s+/).filter(Boolean);
+    var terms = val("q").split(/\s+/).filter(Boolean).map(rot);
     var prod = val("a_prod"), ver = val("a_ver"), plat = $("a_plat").value, type = $("a_type").value;
-    var lang = $("a_lang").value, cve = val("a_cve"), hascve = $("a_hascve").value, auth = val("a_author"), src = $("a_src").value;
+    var lang = $("a_lang").value, cve = val("a_cve"), hascve = $("a_hascve").value, auth = val("a_author");
     var y0 = +$("y0").value, y1 = +$("y1").value; if (y0 > y1) { var t = y0; y0 = y1; y1 = t; }
     var yearFilter = !(y0 === 1995 && y1 === Y);
+    var kev = chk("f_kev"), comp = chk("f_comp"), multi = chk("f_multi");
+    var amask = (chk("x_a0") ? 1 : 0) | (chk("x_a1") ? 2 : 0) | (chk("x_a7") ? 128 : 0);
+    var fmask = (chk("x_f2") ? 4 : 0) | (chk("x_f3") ? 8 : 0) | (chk("x_f4") ? 16 : 0) | (chk("x_f6") ? 64 : 0);
     hits = ALL.filter(function (r) {
-      if (src !== "" && r.s !== +src) return false;
+      if (kev && !r.kev) return false;
+      if (comp && !r.cm) return false;
+      if (multi && r.ns < 2) return false;
+      if ((r.as & amask) !== amask || (r.f & fmask) !== fmask) return false;
       if (plat !== "" && !(r.pl >> +plat & 1)) return false;
       if (type !== "" && !(r.ty >> +type & 1)) return false;
       if (lang === "code" && r.lg < 0) return false;
@@ -151,43 +224,208 @@
       if (hascve === "0" && r.c) return false;
       if (cve && r.c.toLowerCase().indexOf(cve) === -1) return false;
       if (yearFilter && (!r.y || r.y < y0 || r.y > y1)) return false;
-      if (prod && r.pl_.indexOf(prod) === -1) return false;
+      if (prod && r.p_.indexOf(prod) === -1) return false;
       if (ver && r.v.toLowerCase().indexOf(ver) === -1) return false;
       if (auth && r.a_.indexOf(auth) === -1) return false;
       for (var i = 0; i < terms.length; i++) if (r.hay.indexOf(terms[i]) === -1) return false;
       return true;
     });
-    page = 0; render();
+    var s = $("sort").value;
+    if (s === "new") hits.sort(function (a, b) { return b.y - a.y || b.k - a.k; });
+    else if (s === "src") hits.sort(function (a, b) { return b.ns - a.ns || b.k - a.k; });
+    page = 0; openId = null; render(); insights();
+    document.querySelectorAll(".qchip[data-q]").forEach(function (b) { b.classList.toggle("on", qState(b.dataset.q)); });
   }
 
-  function bits(mask, names) {
-    var out = []; for (var i = 0; i < names.length; i++) if (mask >> i & 1) out.push(names[i]); return out;
+  // ---------------------------------------------------------------- insights (distribution of current results)
+  function bars(el, data, total, onpick) {
+    var max = Math.max.apply(null, data.map(function (d) { return d[1]; })) || 1;
+    el.innerHTML = data.map(function (d, i) {
+      return '<button type="button" class="hb" data-i="' + i + '" title="' + esc(d[0]) + ": " + fmt(d[1]) + '"><span class="hl">' + esc(d[0]) +
+        '</span><span class="ht"><i style="width:' + (100 * d[1] / max).toFixed(1) + '%"></i></span><span class="hv">' + fmt(d[1]) + "</span></button>";
+    }).join("") || '<span class="dim">—</span>';
+    el.querySelectorAll(".hb").forEach(function (b) { b.onclick = function () { onpick(data[+b.dataset.i]); }; });
   }
+  function insights() {
+    if (loaded < M.chunks.length) return;
+    $("insights").hidden = hits.length < 30;                 // 结果很少时分布图没有意义
+    if (hits.length < 30) return;
+    var yc = {}, tc = new Array(M.vtypes.length).fill(0), code = 0, lc = {}, pc = {}, i, r;
+    for (i = 0; i < hits.length; i++) {
+      r = hits[i];
+      if (r.y) yc[r.y] = (yc[r.y] || 0) + 1;
+      for (var b = 0; r.ty >> b; b++) if (r.ty >> b & 1) tc[b]++;
+      if (r.lg >= 0) { code++; lc[r.lg] = (lc[r.lg] || 0) + 1; }
+      if (r.p) pc[r.p] = (pc[r.p] || 0) + 1;
+    }
+    // years: columns
+    var ys = Object.keys(yc).map(Number).sort(), lo = ys.length ? Math.max(ys[0], Y - 24) : Y, mx = 1;
+    var yrs = []; for (var y = lo; y <= Y; y++) { yrs.push([y, yc[y] || 0]); mx = Math.max(mx, yc[y] || 0); }
+    $("ins-yr-n").textContent = ys.length && ys[0] < lo ? "(since " + lo + ")" : "";
+    $("ins-years").innerHTML = yrs.map(function (d) {
+      return '<button type="button" class="col" data-y="' + d[0] + '" title="' + d[0] + ": " + fmt(d[1]) + ' reports"><i style="height:' +
+        Math.max(d[1] ? 3 : 0, 100 * d[1] / mx).toFixed(1) + '%"></i><span>' + (d[0] % 5 === 0 || d[0] === Y ? "'" + String(d[0]).slice(2) : "") + "</span></button>";
+    }).join("");
+    $("ins-years").querySelectorAll(".col").forEach(function (b) { b.onclick = function () { $("y0").value = $("y1").value = b.dataset.y; run(); }; });
+    var types = tc.map(function (n, i) { return [M.vtypes[i], n, i]; }).filter(function (d) { return d[1]; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 6);
+    bars($("ins-types"), types, hits.length, function (d) { $("a_type").value = d[2]; run(); });
+    var forms = [["Text-based", hits.length - code, "text"]].concat(Object.keys(lc).map(function (k) { return [M.langs[k], lc[k], k]; }))
+      .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 6);
+    bars($("ins-forms"), forms, hits.length, function (d) { $("a_lang").value = d[2]; run(); });
+    var prods = Object.keys(pc).map(function (k) { return [k, pc[k]]; }).sort(function (a, b) { return b[1] - a[1]; }).slice(0, 14);
+    $("ins-prods").innerHTML = prods.map(function (d, i) { return '<button type="button" class="tchip" data-i="' + i + '">' + esc(d[0]) + " <em>" + fmt(d[1]) + "</em></button>"; }).join("") || '<span class="dim">—</span>';
+    $("ins-prods").querySelectorAll(".tchip").forEach(function (b) { b.onclick = function () { $("a_prod").value = prods[+b.dataset.i][0]; run(); }; });
+    // facet counts in selects
+    var pcnt = new Array(M.platforms.length).fill(0);
+    for (i = 0; i < hits.length; i++) for (var p = 0; hits[i].pl >> p; p++) if (hits[i].pl >> p & 1) pcnt[p]++;
+    Array.prototype.forEach.call($("a_plat").options, function (o) { if (o.value !== "") o.textContent = o.dataset.t + " (" + fmt(pcnt[+o.value]) + ")"; });
+    Array.prototype.forEach.call($("a_type").options, function (o) { if (o.value !== "") o.textContent = o.dataset.t + " (" + fmt(tc[+o.value]) + ")"; });
+  }
+
+  // ---------------------------------------------------------------- results
+  function bits(mask, names) { var out = []; for (var i = 0; i < names.length; i++) if (mask >> i & 1) out.push(names[i]); return out; }
+  function form(r) { return r.lg >= 0 ? M.langs[r.lg] : "Text-based"; }
+  function badges(r) {
+    return (r.kev ? '<span class="bd kev" title="Listed in the CISA Known Exploited Vulnerabilities catalog">KEV</span>' : "") +
+      (r.cm ? '<span class="bd cm" title="Complete, runnable or step-by-step PoC">Complete PoC</span>' : "") +
+      (r.ns >= 2 ? '<span class="bd ms" title="PoCs for this CVE come from ' + r.ns + ' independent sources">' + (r.ns >= 7 ? "7+" : r.ns) + " sources</span>" : "");
+  }
+  var openId = null, BASKET = [];
+  try { BASKET = JSON.parse(localStorage.getItem("cs-req") || "[]"); } catch (e) { BASKET = []; }
   function render() {
-    $("meta").textContent = hits.length.toLocaleString() + " report" + (hits.length === 1 ? "" : "s") + " match";
+    $("meta").innerHTML = "<b>" + fmt(hits.length) + "</b> report" + (hits.length === 1 ? "" : "s") + (filtersActive() ? " match" : " — showing the most complete PoCs first");
     var slice = hits.slice(page * PAGE, page * PAGE + PAGE);
     if (!slice.length) { $("rows").innerHTML = '<tr><td colspan="6" class="empty">' + (loaded ? "No matching reports." : "Loading…") + "</td></tr>"; $("pager").innerHTML = ""; return; }
     $("rows").innerHTML = slice.map(function (r) {
-      var cves = r.c ? r.c.split(" ").map(function (c) { return '<a class="cvechip" href="https://nvd.nist.gov/vuln/detail/' + CS.esc(c) + '" target="_blank" rel="noopener">' + CS.esc(c) + "</a>"; }).join("") : '<span class="nocve">No CVE</span>';
-      var pl = bits(r.pl, M.platforms).map(function (x) { return '<span class="src">' + CS.esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
-      var ty = bits(r.ty, M.vtypes).map(function (x) { return '<span class="src">' + CS.esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
-      var mail = CS.mailto("CyberSploit data request: " + M.sources[r.s] + " #" + r.id, "Record: " + M.sources[r.s] + " #" + r.id + (r.c ? "\nCVE: " + r.c : "") + "\nName:\nAffiliation:\nIntended use:\n");
-      return "<tr><td class=\"title\"><div class=\"rsrc\">" + CS.esc(M.sources[r.s]) + (r.lg >= 0 ? " · " + CS.esc(M.langs[r.lg]) : "") + "</div>" + '<div class="rt" title="' + CS.esc(r.t) + '">' + (CS.esc(r.t) || '<span class="dim">Untitled</span>') + "</div>" +
-        '<div class="cves">' + cves + '<a class="req" href="' + mail + '">Request record →</a></div></td><td>' + (CS.esc(r.p) || '<span class="dim">—</span>') + (r.v ? '<div class="ver">' + CS.esc(r.v) + "</div>" : "") +
-        "</td><td>" + pl + "</td><td>" + ty + "</td><td class=\"auth\">" + (CS.esc(r.a) || '<span class="dim">—</span>') + '</td><td class="num">' + (r.y || "—") + "</td></tr>";
+      var cves = r.c ? r.c.split(" ").map(function (c) { return '<a class="cvechip" href="https://nvd.nist.gov/vuln/detail/' + esc(c) + '" target="_blank" rel="noopener">' + esc(c) + "</a>"; }).join("") : '<span class="nocve">No CVE</span>';
+      var pl = bits(r.pl, M.platforms).map(function (x) { return '<span class="src">' + esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
+      var ty = bits(r.ty, M.vtypes).map(function (x) { return '<span class="src">' + esc(x) + "</span>"; }).join("") || '<span class="dim">—</span>';
+      return '<tr class="rrow' + (openId === r.id ? " open" : "") + '" data-id="' + r.id + '"><td class="title"><div class="rmeta"><span class="form">' + esc(form(r)) + "</span>" + badges(r) + "</div>" +
+        '<div class="rt" title="' + esc(T(r)) + '">' + (esc(T(r)) || '<span class="dim">Untitled report</span>') + "</div>" +
+        '<div class="cves">' + cves + '<button type="button" class="more">' + (openId === r.id ? "Hide details" : "Details") + "</button></div></td>" +
+        "<td>" + (esc(r.p) || '<span class="dim">—</span>') + (r.v ? '<div class="ver">' + esc(r.v) + "</div>" : "") +
+        "</td><td>" + pl + "</td><td>" + ty + '</td><td class="auth">' + (esc(r.a) || '<span class="dim">—</span>') + '</td><td class="num">' + (r.y || "—") + "</td></tr>" +
+        (openId === r.id ? '<tr class="drow"><td colspan="6"><div class="det" id="det">Loading…</div></td></tr>' : "");
     }).join("");
+    if (openId) detail(byId(openId));
     var pages = Math.ceil(hits.length / PAGE);
     $("pager").innerHTML = pages > 1 ? '<button class="btn" id="prev"' + (page ? "" : " disabled") + '>← Prev</button><span class="pg">Page ' +
-      (page + 1) + " of " + pages.toLocaleString() + '</span><button class="btn" id="next"' + (page < pages - 1 ? "" : " disabled") + ">Next →</button>" : "";
-    if (pages > 1) { $("prev").onclick = function () { page--; render(); scrollTo(0, $("meta").offsetTop - 80); }; $("next").onclick = function () { page++; render(); scrollTo(0, $("meta").offsetTop - 80); }; }
+      (page + 1) + " of " + fmt(pages) + '</span><button class="btn" id="next"' + (page < pages - 1 ? "" : " disabled") + ">Next →</button>" : "";
+    if (pages > 1) { $("prev").onclick = function () { page--; openId = null; render(); scrollTo(0, $("meta").offsetTop - 80); }; $("next").onclick = function () { page++; openId = null; render(); scrollTo(0, $("meta").offsetTop - 80); }; }
   }
+  function byId(id) { for (var i = 0; i < hits.length; i++) if (hits[i].id === id) return hits[i]; return null; }
+  $("rows").addEventListener("click", function (e) {
+    if (e.target.closest("a") || e.target.closest(".drow")) return;
+    var tr = e.target.closest(".rrow"); if (!tr) return;
+    openId = openId === tr.dataset.id ? null : tr.dataset.id;
+    render();
+  });
+
+  // ---------------------------------------------------------------- detail card
+  var CVEMAP = null;
+  function siblings(c) {
+    if (!CVEMAP) { CVEMAP = {}; ALL.forEach(function (r) { if (r.c) r.c.split(" ").forEach(function (x) { (CVEMAP[x] = CVEMAP[x] || []).push(r); }); }); }
+    return CVEMAP[c] || [];
+  }
+  function days(a, b) { return Math.round((Date.parse(b) - Date.parse(a)) / 864e5); }
+  function detail(r) {
+    if (!r) return;
+    var cl = r.c ? r.c.split(" ") : [], need = 1 + Math.min(cl.length, 2), got_ = 0, det = null, cv = {};
+    function done() { if (++got_ < need) return; draw(r, det, cv, cl); }
+    loadChunk("det/" + r.id.slice(0, 2), function (d) { det = d[r.id] || null; done(); });
+    cl.slice(0, 2).forEach(function (c) { loadChunk("cve/" + c.slice(-2), function (d) { cv[c] = d[c] || null; done(); }); });
+  }
+  function draw(r, det, cv, cl) {
+    var el = $("det"); if (!el) return;
+    det = det || ["", 0, 0, 0];
+    var main = r.lg >= 0 ? M.langs[r.lg] + " PoC" + (det[1] ? " · " + fmt(det[1]) + " lines of code" : "") : "Text-based PoC" + (det[2] ? " · " + det[2] + " reproduction steps" : "");
+    var feats = [];
+    if (r.f >> 1 & 1) feats.push(det[2] ? det[2] + " steps" : "Step-by-step");
+    [[2, "HTTP request"], [3, "Payload"], [5, "Video demo"], [6, "Crash trace"]].forEach(function (x) { if (r.f >> x[0] & 1) feats.push(x[1]); });
+    if (det[3]) feats.push(det[3] + (det[3] === 1 ? " attached file" : " attached files"));
+    var col1 = '<div class="dcol"><h4>PoC profile</h4><div class="pf">' + esc(main) + "</div>" +
+      (r.cm ? '<div class="pf-ok">✓ Complete PoC — runnable code or full reproduction steps</div>' : "") +
+      '<div class="fchips">' + feats.map(function (x) { return '<span class="src">' + esc(x) + "</span>"; }).join("") + "</div>" +
+      '<dl><dt>Published</dt><dd>' + esc(det[0] || (r.y ? String(r.y) : "—")) + "</dd><dt>Record ID</dt><dd class=\"mono\">CS-" + esc(r.id) + "</dd></dl></div>";
+    var col2 = '<div class="dcol"><h4>Key aspects <span class="cnt">' + r.na + " / " + ASP.length + '</span></h4><ul class="asp">' +
+      ASP.map(function (a, i) { return '<li class="' + (r.as >> i & 1 ? "y" : "n") + '">' + esc(a) + "</li>"; }).join("") + "</ul></div>";
+    var col3;
+    if (!cl.length) {
+      col3 = '<div class="dcol"><h4>Vulnerability</h4><p class="dp">This PoC has <b>no CVE ID</b> — one of ' + fmt(NOCVE) +
+        " such reports in CyberSploit that CVE-indexed datasets cannot see. Our PoC–CVE link recovery (RESYNC) suggests candidate CVEs for reports like this.</p></div>";
+    } else {
+      var c = cl[0], m = cv[c];
+      col3 = '<div class="dcol"><h4>Vulnerability</h4><div class="vh"><a class="cvechip" href="https://nvd.nist.gov/vuln/detail/' + esc(c) + '" target="_blank" rel="noopener">' + esc(c) + "</a>" +
+        (m && m[6] ? '<span class="bd kev">KEV</span>' : "") + "</div>";
+      if (m) {
+        col3 += "<dl>" + (m[0] ? "<dt>CVE published</dt><dd>" + esc(m[0]) + "</dd>" : "") + (m[1].length ? "<dt>Weakness</dt><dd>" + m[1].map(esc).join(", ") + "</dd>" : "") +
+          (m[2].length ? "<dt>Affected</dt><dd>" + m[2].map(esc).join(", ") + "</dd>" : "") +
+          "<dt>Corroboration</dt><dd><b>" + fmt(m[4]) + "</b> PoC report" + (m[4] === 1 ? "" : "s") + " from <b>" + m[3] + "</b> independent source" + (m[3] === 1 ? "" : "s") + "</dd></dl>";
+        var dd = m[0] && m[5] ? days(m[0], m[5]) : null;
+        if (dd !== null && dd >= -60) {                       // 早于 CVE 公开 60 天以上的多半是日期 / 关联错误，不展示
+          col3 += '<div class="tl">' + (dd < 0 ? "First public PoC appeared <b>" + fmt(-dd) + " day" + (dd === -1 ? "" : "s") + " before</b> the CVE was published"
+            : dd === 0 ? "First public PoC appeared <b>the same day</b> the CVE was published" : "First public PoC: " + esc(m[5]) + " (" + fmt(dd) + " days after the CVE)") + "</div>";
+        }
+      }
+      if (cl.length > 1) col3 += '<p class="dp">Also linked to ' + cl.slice(1).map(function (x) { return '<a href="#" class="tocve" data-c="' + esc(x) + '">' + esc(x) + "</a>"; }).join(", ") + "</p>";
+      col3 += "</div>";
+    }
+    var sib = "";
+    if (cl.length) {
+      var others = siblings(cl[0]).filter(function (x) { return x.id !== r.id; });
+      if (others.length) {
+        others.sort(function (a, b) { return b.k - a.k; });
+        sib = '<div class="sib"><h4>Other PoCs for ' + esc(cl[0]) + ' <span class="cnt">' + fmt(others.length) + "</span></h4><ul>" +
+          others.slice(0, 5).map(function (x) {
+            return '<li><span class="form">' + esc(form(x)) + "</span>" + (x.cm ? '<span class="bd cm">Complete</span>' : "") + '<span class="sbt">' + (esc(T(x)) || "Untitled report") + '</span><span class="dim">' + (x.y || "") + "</span></li>";
+          }).join("") + "</ul>" + (others.length > 5 ? '<a href="#" class="tocve" data-c="' + esc(cl[0]) + '">Show all ' + fmt(others.length + 1) + " reports →</a>" : "") + "</div>";
+      }
+    }
+    var inB = BASKET.indexOf(r.id) >= 0;
+    var mail = CS.mailto("CyberSploit data request: CS-" + r.id, "Record: CS-" + r.id + (r.c ? "\nCVE: " + r.c : "") + "\nName:\nAffiliation:\nIntended use:\n\nI agree to use the data for research and defensive purposes only and not to redistribute it.");
+    el.innerHTML = '<div class="det-grid">' + col1 + col2 + col3 + "</div>" + sib +
+      '<div class="det-act"><button type="button" class="btn sm" id="bk-add">' + (inB ? "✓ In request list" : "+ Add to request list") + '</button><a class="btn sm primary" href="' + mail +
+      '">Request this record →</a><span class="fine">Full PoC code, steps and attachments are shared with researchers on request.</span></div>';
+    $("bk-add").onclick = function () { toggleBasket(r.id); this.textContent = BASKET.indexOf(r.id) >= 0 ? "✓ In request list" : "+ Add to request list"; };
+    el.querySelectorAll(".tocve").forEach(function (a) { a.onclick = function (e) { e.preventDefault(); $("f").reset(); $("y0").value = 1995; $("y1").value = Y; $("a_cve").value = a.dataset.c; run(); }; });
+  }
+
+  // ---------------------------------------------------------------- request list
+  function saveBasket() { try { localStorage.setItem("cs-req", JSON.stringify(BASKET)); } catch (e) {} drawBasket(); }
+  function toggleBasket(id) { var i = BASKET.indexOf(id); if (i >= 0) BASKET.splice(i, 1); else if (BASKET.length < 50) BASKET.push(id); saveBasket(); }
+  function drawBasket() {
+    $("basket").hidden = !BASKET.length; $("bk-n").textContent = BASKET.length;
+    $("bk-send").href = CS.mailto("CyberSploit data request (" + BASKET.length + " records)", "Records:\n" + BASKET.map(function (x) { return "CS-" + x; }).join("\n") +
+      "\n\nName:\nAffiliation:\nIntended use:\n\nI agree to use the data for research and defensive purposes only and not to redistribute it.");
+  }
+  $("bk-clear").onclick = function () { BASKET = []; saveBasket(); if (openId) render(); };
+  drawBasket();
+
+  // ---------------------------------------------------------------- quick chips
+  function qState(k) {
+    return k === "kev" ? chk("f_kev") : k === "complete" ? chk("f_comp") : k === "multi" ? chk("f_multi") :
+      k === "nocve" ? $("a_hascve").value === "0" : k === "recent" ? +$("y0").value === Y && +$("y1").value === Y : false;
+  }
+  document.querySelectorAll(".qchip[data-q]").forEach(function (b) {
+    b.onclick = function () {
+      var k = b.dataset.q, on = !qState(k);
+      if (k === "kev") $("f_kev").checked = on; else if (k === "complete") $("f_comp").checked = on; else if (k === "multi") $("f_multi").checked = on;
+      else if (k === "nocve") $("a_hascve").value = on ? "0" : ""; else if (k === "recent") { $("y0").value = on ? Y : 1995; $("y1").value = Y; }
+      run();
+    };
+  });
+  document.querySelectorAll(".qchip[data-ex]").forEach(function (b) { b.onclick = function () { $("q").value = b.dataset.ex; run(); }; });
 
   var timer; function later() { clearTimeout(timer); timer = setTimeout(run, 200); }
   $("f").addEventListener("submit", function (e) { e.preventDefault(); run(); });
   ["a_prod", "a_ver", "a_cve", "a_author", "q"].forEach(function (id) { $(id).addEventListener("input", later); });
-  ["a_plat", "a_lang", "a_type", "a_hascve", "a_src", "y0", "y1"].forEach(function (id) { $(id).addEventListener("change", run); });
+  ["a_plat", "a_lang", "a_type", "a_hascve", "y0", "y1", "sort"].forEach(function (id) { $(id).addEventListener("change", run); });
+  document.querySelectorAll(".aspect-panel input[type=checkbox]").forEach(function (c) { c.addEventListener("change", run); });
   $("reset").addEventListener("click", function () { $("f").reset(); $("y0").value = 1995; $("y1").value = Y; run(); });
   var p = new URLSearchParams(location.search); ["q", "a_prod", "a_ver", "a_cve", "a_author"].forEach(function (k) { if (p.get(k)) $(k).value = p.get(k); });
+  // ?id=CS-XXXXXXXX：直接打开某条记录的详情（可用于分享链接）
+  var wantId = (p.get("id") || "").replace(/^cs-/i, "").toUpperCase();
+  if (wantId) { $("q").value = "CS-" + wantId; var _run = run; run = function () { _run(); if (loaded === M.chunks.length && byId(wantId)) { openId = wantId; render(); wantId = ""; run = _run; } }; }
 })();
 </script>
 </body>
