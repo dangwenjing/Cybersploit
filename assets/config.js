@@ -36,6 +36,21 @@ window.CS_CONFIG = {
       venue: "33rd ACM International Conference on the Foundations of Software Engineering (FSE Companion '25), pp. 1774–1777",
       doi: "10.1145/3696630.3730572",
     },
+    // 预印本（arXiv，2026-11-25 核实作者顺序）
+    {
+      tag: "Preprint",
+      title: "Real-World Usability of Vulnerability Proof-of-Concepts: A Comprehensive Study",
+      authors: "Wenjing Dang, Kaixuan Li, Sen Chen, Zhenwei Zhuo, Lyuye Zhang, Zheli Liu",
+      venue: "arXiv:2510.18448, Oct 2025",
+      doi: "10.48550/arXiv.2510.18448",
+    },
+    {
+      tag: "Preprint",
+      title: "A Systematic Study on Generating Web Vulnerability Proof-of-Concepts Using Large Language Models",
+      authors: "Mengyao Zhao, Kaixuan Li, Lyuye Zhang, Wenjing Dang, Chenggong Ding, Sen Chen, Zheli Liu",
+      venue: "arXiv:2510.10148, Oct 2025",
+      doi: "10.48550/arXiv.2510.10148",
+    },
   ],
 
   // 进行中的工作（不写投稿去向）
@@ -44,11 +59,6 @@ window.CS_CONFIG = {
       tag: "Linking", status: "review",
       title: "RESYNC: Aspect-Guided Knowledge Modeling and Semantic Ranking for PoC–CVE Link Recovery",
       desc: "Recovers missing links between PoC reports and CVE records.",
-    },
-    {
-      tag: "Study", status: "review",
-      title: "Real-World Usability of Vulnerability Proof-of-Concepts: A Comprehensive Study",
-      desc: "Availability, completeness and reproducibility of PoCs in the wild.",
     },
     {
       tag: "Migration", status: "review",
