@@ -115,29 +115,30 @@ window.CS_CONFIG = {
 
   // 与现有数据集的对比（其他数据集的信息请核实；值：yes / no / part / links / 文本）
   // 维度：scope 来源，scale 规模，nonCve 收录无 CVE 的 PoC，text 文字步骤类 PoC（不只代码），
-  //       content 含完整 PoC（links = 只有链接），verified 可复现性已验证，aspects 关键要素结构化，
-  //       completion 多源补全，linking PoC–CVE 关联恢复，access 获取方式，updated 持续更新
+  //       content 含完整 PoC（links = 只有链接），aspects 关键要素结构化，
+  //       completion 多源补全，linking PoC–CVE 关联恢复，updated 持续更新
+  // 只放对我们有利或中性的维度（用户 2026-11-24：获取方式、验证这类对我们不利的不写）
   compareAsOf: "November 2026",
   compare: [
-    { name: "Exploit-DB", scope: "Curated exploit archive", scale: "46K+", nonCve: "yes", text: "part", content: "yes", verified: "part",
-      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
-    { name: "Packet Storm", scope: "Security file archive", scale: "—", nonCve: "yes", text: "yes", content: "yes", verified: "no",
-      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
-    { name: "Metasploit", scope: "Exploit modules", scale: "2.5K+", nonCve: "part", text: "no", content: "yes", verified: "part",
-      aspects: "part", completion: "no", linking: "no", access: "Open", updated: "yes" },
-    { name: "Nuclei Templates", scope: "Detection templates", scale: "—", nonCve: "yes", text: "no", content: "yes", verified: "part",
-      aspects: "part", completion: "no", linking: "no", access: "Open", updated: "yes" },
-    { name: "PoC-in-GitHub", scope: "GitHub repositories", scale: "12K+ CVEs", nonCve: "no", text: "no", content: "links", verified: "no",
-      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
-    { name: "trickest/cve", scope: "GitHub + CVE references", scale: "—", nonCve: "no", text: "no", content: "links", verified: "no",
-      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
-    { name: "Vulners", scope: "Aggregator", scale: "—", nonCve: "yes", text: "part", content: "yes", verified: "no",
-      aspects: "no", completion: "no", linking: "no", access: "Commercial", updated: "yes" },
-    { name: "Sploitus", scope: "Exploit search engine", scale: "—", nonCve: "yes", text: "part", content: "yes", verified: "no",
-      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "yes" },
-    { name: "ARVO", scope: "OSS-Fuzz crashes", scale: "5K+", nonCve: "yes", text: "no", content: "yes", verified: "yes",
-      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "part" },
-    { name: "Vul4J", scope: "Java projects", scale: "79", nonCve: "part", text: "no", content: "yes", verified: "yes",
-      aspects: "no", completion: "no", linking: "no", access: "Open", updated: "no" },
+    { name: "Exploit-DB", scope: "Curated exploit archive", scale: "46K+", nonCve: "yes", text: "part", content: "yes",
+      aspects: "no", completion: "no", linking: "no", updated: "yes" },
+    { name: "Packet Storm", scope: "Security file archive", scale: "—", nonCve: "yes", text: "yes", content: "yes",
+      aspects: "no", completion: "no", linking: "no", updated: "yes" },
+    { name: "Metasploit", scope: "Exploit modules", scale: "2.5K+", nonCve: "part", text: "no", content: "yes",
+      aspects: "part", completion: "no", linking: "no", updated: "yes" },
+    { name: "Nuclei Templates", scope: "Detection templates", scale: "—", nonCve: "yes", text: "no", content: "yes",
+      aspects: "part", completion: "no", linking: "no", updated: "yes" },
+    { name: "PoC-in-GitHub", scope: "GitHub repositories", scale: "12K+ CVEs", nonCve: "no", text: "no", content: "links",
+      aspects: "no", completion: "no", linking: "no", updated: "yes" },
+    { name: "trickest/cve", scope: "GitHub + CVE references", scale: "—", nonCve: "no", text: "no", content: "links",
+      aspects: "no", completion: "no", linking: "no", updated: "yes" },
+    { name: "Vulners", scope: "Aggregator", scale: "—", nonCve: "yes", text: "part", content: "yes",
+      aspects: "no", completion: "no", linking: "no", updated: "yes" },
+    { name: "Sploitus", scope: "Exploit search engine", scale: "—", nonCve: "yes", text: "part", content: "yes",
+      aspects: "no", completion: "no", linking: "no", updated: "yes" },
+    { name: "ARVO", scope: "OSS-Fuzz crashes", scale: "5K+", nonCve: "yes", text: "no", content: "yes",
+      aspects: "no", completion: "no", linking: "no", updated: "part" },
+    { name: "Vul4J", scope: "Java projects", scale: "79", nonCve: "part", text: "no", content: "yes",
+      aspects: "no", completion: "no", linking: "no", updated: "no" },
   ],
 };

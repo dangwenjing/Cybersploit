@@ -148,8 +148,8 @@ th { font: 600 11.5px var(--sans); color: var(--text-2); text-transform: upperca
 .compare th, .compare td { padding: 11px 8px; }
 .compare td:first-child, .compare th:first-child { padding-left: 14px; }
 .compare td:nth-child(2) { min-width: 118px; }
-.compare td[class^="c-"]:not(.c-scope):not(.c-scale):not(.c-access) { text-align: center; }
-.compare tr:not(.grp) th:not(:nth-child(-n+2)):not(:nth-last-child(2)) { text-align: center; }
+.compare td[class^="c-"]:not(.c-scope):not(.c-scale) { text-align: center; }
+.compare tr:not(.grp) th:not(:nth-child(-n+2)) { text-align: center; }
 .compare .yes, .compare .no, .compare .part:not(.lk) { font-size: 0; gap: 0; }       /* 只显示符号，文字留给读屏 */
 .compare .yes::before, .compare .no::before, .compare .part::before { font-size: 15px; }
 .compare .no::before { color: var(--muted); opacity: .7; }
@@ -157,7 +157,6 @@ th { font: 600 11.5px var(--sans); color: var(--text-2); text-transform: upperca
 .compare tr.grp th { text-align: center; border-bottom: 1px solid var(--border); border-left: 1px solid var(--border); }
 .compare tr.grp th:first-child { text-align: left; border-left: 0; vertical-align: bottom; }
 .compare td.c-scale { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.compare td.c-access { color: var(--text-2); font-size: 13px; white-space: nowrap; }
 tr:last-child td { border-bottom: 0; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .compare td:first-child { font-weight: 560; white-space: nowrap; }
