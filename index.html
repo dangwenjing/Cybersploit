@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611242351">
+  <link rel="stylesheet" href="assets/style.css?v=202611242354">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -284,7 +284,6 @@
       <div class="section-head">
         <p class="eyebrow">Publications</p>
         <h2>Research behind CyberSploit</h2>
-        <p class="lead">If you use CyberSploit, please cite the corresponding papers. Full list on <a id="orcid" href="#" target="_blank" rel="noopener">ORCID</a>.</p>
         <p class="lead"><b>We are actively seeking research collaborators.</b> If you work on vulnerability PoCs — linking, completion, validation, migration or trustworthiness — and would like to build on CyberSploit or co-author a study, <a href="#involved">get in touch</a>.</p>
       </div>
       <div class="card pubs" id="pubs"></div>
@@ -368,10 +367,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611242351"></script>
-<script src="assets/common.js?v=202611242351"></script>
-<script src="assets/charts.js?v=202611242351"></script>
-<script src="data/stats.js?v=202611242351"></script>
+<script src="assets/config.js?v=202611242354"></script>
+<script src="assets/common.js?v=202611242354"></script>
+<script src="assets/charts.js?v=202611242354"></script>
+<script src="data/stats.js?v=202611242354"></script>
 <script>
   // 首屏数字随导出的数据版本自动更新
   (function () {
@@ -461,7 +460,6 @@
         '</div><div class="a">' + CS.esc(p.people) + '</div><div class="s">' + CS.esc(p.detail) +
         ' · <span lang="zh">' + CS.esc(p.original) + "</span></div></div></div>";
     }).join("");
-    document.getElementById("orcid").href = C.orcid;
     document.querySelectorAll("[data-issues]").forEach(function (a) { a.href = C.issuesUrl; });
     document.querySelectorAll("[data-mailto-collab]").forEach(function (a) {
       a.href = CS.mailto("CyberSploit: research collaboration", "Name:\nAffiliation:\nTopic / idea:\n");
