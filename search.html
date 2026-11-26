@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611250226">
+  <link rel="stylesheet" href="assets/style.css?v=202611270036">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -118,8 +118,14 @@
 </main>
 
 <div class="basket" id="basket" hidden>
-  <div class="wrap">
-    <span><b id="bk-n">0</b> records in your request list</span>
+  <div class="bk-panel" id="bk-panel" hidden>
+    <div class="wrap">
+      <div class="bk-head"><span>Your request list</span><span>Up to 50 records per request</span></div>
+      <ul class="bk-list" id="bk-list"></ul>
+    </div>
+  </div>
+  <div class="wrap bk-bar">
+    <button type="button" class="bk-toggle" id="bk-toggle" aria-expanded="false" aria-controls="bk-panel"><span><b id="bk-n">0</b> <span id="bk-unit">records</span> in your request list</span><span class="bk-chev" id="bk-chev">View ▴</span></button>
     <span class="bk-a"><button class="btn sm" type="button" id="bk-clear">Clear</button><a class="btn sm primary" id="bk-send" href="#">Request these records →</a></span>
   </div>
 </div>
@@ -131,10 +137,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611250226"></script>
-<script src="assets/common.js?v=202611250226"></script>
-<script>window.CS_BUILD = "202611250226";</script>
-<script src="data/meta.js?v=202611250226"></script>
+<script src="assets/config.js?v=202611270036"></script>
+<script src="assets/common.js?v=202611270036"></script>
+<script>window.CS_BUILD = "202611270036";</script>
+<script src="data/meta.js?v=202611270036"></script>
 <script>
 (function () {
   var M = window.CS_META, PAGE = 30, $ = function (id) { return document.getElementById(id); };
@@ -174,7 +180,7 @@
   function chunkDone() {
     loaded++;
     $("load").textContent = loaded < M.chunks.length ? "Loading index " + loaded + "/" + M.chunks.length + "… " : "";
-    if (loaded === M.chunks.length) { ALL.sort(function (a, b) { return b.k - a.k || b.y - a.y; }); CVEMAP = null; run(); }
+    if (loaded === M.chunks.length) { ALL.sort(function (a, b) { return b.k - a.k || b.y - a.y; }); CVEMAP = null; run(); if (!$("bk-panel").hidden) drawList(); }
     else if (loaded % 4 === 0) run();
   }
   M.chunks.forEach(function (s) { var e = document.createElement("script"); e.src = "data/" + s.file + "?v=" + (window.CS_BUILD || ""); e.async = true; e.onerror = chunkDone; document.body.appendChild(e); });
@@ -394,10 +400,47 @@
   function saveBasket() { try { localStorage.setItem("cs-req", JSON.stringify(BASKET)); } catch (e) {} drawBasket(); }
   function toggleBasket(id) { var i = BASKET.indexOf(id); if (i >= 0) BASKET.splice(i, 1); else if (BASKET.length < 50) BASKET.push(id); saveBasket(); }
   function drawBasket() {
-    $("basket").hidden = !BASKET.length; $("bk-n").textContent = BASKET.length;
+    var n = BASKET.length;
+    $("basket").hidden = !n; $("bk-n").textContent = n; $("bk-unit").textContent = n === 1 ? "record" : "records";
+    if (!n) showList(false);
     $("bk-send").href = CS.mailto("CyberSploit data request (" + BASKET.length + " records)", "Records:\n" + BASKET.map(function (x) { return "CS-" + x; }).join("\n") +
       "\n\nName:\nAffiliation:\nIntended use:\n\nI agree to use the data for research and defensive purposes only and not to redistribute it.");
+    if (!$("bk-panel").hidden) drawList();
   }
+  // 申请清单可展开：查看已选记录、单条移除、点 View 打开详情（标题等从已加载的索引里按编号查）
+  function drawList() {
+    var want = {}, found = {}, done = loaded === M.chunks.length;
+    BASKET.forEach(function (id) { want[id] = 1; });
+    for (var i = 0; i < ALL.length; i++) if (want[ALL[i].id]) found[ALL[i].id] = ALL[i];
+    $("bk-list").innerHTML = BASKET.map(function (id) {
+      var r = found[id], sub = '<span class="mono">CS-' + esc(id) + "</span>";
+      if (r) {
+        var cl = r.c ? r.c.split(" ") : [];
+        sub += " · " + esc(form(r)) + " · " + (cl.length ? esc(cl.slice(0, 2).join(", ")) + (cl.length > 2 ? " +" + (cl.length - 2) : "") : "No CVE") + (r.y ? " · " + r.y : "");
+      }
+      var title = r ? (esc(T(r)) || "Untitled report") : (done ? "Not in the current index" : "Loading…");
+      return '<li data-id="' + esc(id) + '"><div class="bk-t"><span class="tt">' + title + '</span><span class="sub">' + sub + "</span></div>" +
+        (r ? '<button type="button" class="bk-ln" data-act="view">View</button>' : "<span></span>") +
+        '<button type="button" class="bk-ln bk-rm" data-act="rm" aria-label="Remove CS-' + esc(id) + ' from the request list">Remove</button></li>';
+    }).join("");
+  }
+  function showList(on) {
+    $("bk-panel").hidden = !on; $("bk-toggle").setAttribute("aria-expanded", on ? "true" : "false");
+    $("bk-chev").textContent = on ? "Hide ▾" : "View ▴";
+    if (on) drawList();
+  }
+  $("bk-toggle").onclick = function () { showList($("bk-panel").hidden); };
+  $("bk-list").onclick = function (e) {
+    var b = e.target.closest("button[data-act]"); if (!b) return;
+    var id = b.closest("li").dataset.id;
+    if (b.dataset.act === "rm") { var i = BASKET.indexOf(id); if (i >= 0) BASKET.splice(i, 1); saveBasket(); if (openId) render(); return; }
+    showList(false); clearForm(); $("q").value = "CS-" + id; run();
+    if (byId(id)) { openId = id; render(); }
+    scrollTo(0, $("meta").offsetTop - 80);
+  };
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !$("bk-panel").hidden && !document.querySelector(".rq:not([hidden])")) showList(false);
+  });
   $("bk-clear").onclick = function () { BASKET = []; saveBasket(); if (openId) render(); };
   drawBasket();
 
