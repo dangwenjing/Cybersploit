@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=202611270036">
+  <link rel="stylesheet" href="assets/style.css?v=202611270044">
   <script>try { var t = localStorage.getItem("cs-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
@@ -102,7 +102,7 @@
 
   <div class="result-meta">
     <span id="meta">Loading index…</span>
-    <span class="rm-r"><span id="load"></span>
+    <span class="rm-r"><span id="load"></span><span class="aa-msg" id="addAllMsg" aria-live="polite"></span><button type="button" class="btn sm" id="addAll" hidden>+ Add all to request list</button>
       <label class="sortl">Sort <select id="sort"><option value="best">Best match</option><option value="new">Newest</option><option value="src">Most corroborated</option></select></label>
     </span>
   </div>
@@ -120,7 +120,7 @@
 <div class="basket" id="basket" hidden>
   <div class="bk-panel" id="bk-panel" hidden>
     <div class="wrap">
-      <div class="bk-head"><span>Your request list</span><span>Up to 50 records per request</span></div>
+      <div class="bk-head"><span>Your request list</span><span id="bk-note"></span></div>
       <ul class="bk-list" id="bk-list"></ul>
     </div>
   </div>
@@ -137,10 +137,10 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=202611270036"></script>
-<script src="assets/common.js?v=202611270036"></script>
-<script>window.CS_BUILD = "202611270036";</script>
-<script src="data/meta.js?v=202611270036"></script>
+<script src="assets/config.js?v=202611270044"></script>
+<script src="assets/common.js?v=202611270044"></script>
+<script>window.CS_BUILD = "202611270044";</script>
+<script src="data/meta.js?v=202611270044"></script>
 <script>
 (function () {
   var M = window.CS_META, PAGE = 30, $ = function (id) { return document.getElementById(id); };
@@ -239,7 +239,7 @@
     var s = $("sort").value;
     if (s === "new") hits.sort(function (a, b) { return b.y - a.y || b.k - a.k; });
     else if (s === "src") hits.sort(function (a, b) { return b.ns - a.ns || b.k - a.k; });
-    page = 0; openId = null; render(); insights();
+    page = 0; openId = null; render(); insights(); $("addAllMsg").textContent = ""; drawAddAll();
     document.querySelectorAll(".qchip[data-q]").forEach(function (b) { b.classList.toggle("on", qState(b.dataset.q)); });
   }
 
@@ -398,21 +398,73 @@
 
   // ---------------------------------------------------------------- request list
   function saveBasket() { try { localStorage.setItem("cs-req", JSON.stringify(BASKET)); } catch (e) {} drawBasket(); }
-  function toggleBasket(id) { var i = BASKET.indexOf(id); if (i >= 0) BASKET.splice(i, 1); else if (BASKET.length < 50) BASKET.push(id); saveBasket(); }
+  function toggleBasket(id) { var i = BASKET.indexOf(id); if (i >= 0) BASKET.splice(i, 1); else if (BASKET.length < CAP) BASKET.push(id); saveBasket(); }
   function drawBasket() {
     var n = BASKET.length;
     $("basket").hidden = !n; $("bk-n").textContent = n; $("bk-unit").textContent = n === 1 ? "record" : "records";
     if (!n) showList(false);
-    $("bk-send").href = CS.mailto("CyberSploit data request (" + BASKET.length + " records)", "Records:\n" + BASKET.map(function (x) { return "CS-" + x; }).join("\n") +
+    $("bk-send").href = CS.mailto("CyberSploit data request (" + fmt(n) + " record" + (n === 1 ? "" : "s") + ")",
+      (n > INLINE ? "Records: " + fmt(n) + " (see the attached list " + listName() + ")" : "Records:\n" + BASKET.map(function (x) { return "CS-" + x; }).join("\n")) +
       "\n\nName:\nAffiliation:\nIntended use:\n\nI agree to use the data for research and defensive purposes only and not to redistribute it.");
     if (!$("bk-panel").hidden) drawList();
+    drawAddAll();
   }
+  // 一键把当前检索结果加入申请清单（按当前排序，跳过已在清单里的，最多到 CAP 条）
+  // 清单上限 CAP（防止宽条件一下加入十几万条）；超过 INLINE 条时邮件正文不列编号，改为下载 CSV 附件
+  var CAP = 10000, INLINE = 50, aaTimer;
+  function listName() { return "cybersploit_request_" + BASKET.length + "_records.csv"; }
+  function csvCell(v) {
+    v = String(v == null ? "" : v);
+    if (/^[=+\-@\t\r]/.test(v)) v = "'" + v;                 // 防 CSV 公式注入（PoC 标题里可能就有 =cmd| 之类）
+    return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }
+  function listCsv() {
+    var want = {}, found = {};
+    BASKET.forEach(function (id) { want[id] = 1; });
+    for (var i = 0; i < ALL.length; i++) if (want[ALL[i].id]) found[ALL[i].id] = ALL[i];
+    var rows = [["record_id", "cve", "year", "form", "title"]].concat(BASKET.map(function (id) {
+      var r = found[id];
+      return r ? ["CS-" + id, r.c || "", r.y || "", form(r), T(r)] : ["CS-" + id, "", "", "", ""];
+    }));
+    return "\ufeff" + rows.map(function (r) { return r.map(csvCell).join(","); }).join("\r\n") + "\r\n";
+  }
+  $("bk-send").addEventListener("click", function (e) {
+    if (BASKET.length <= INLINE) return;                    // 短清单：交给 common.js 的通用申请弹窗
+    e.preventDefault(); e.stopPropagation();
+    CS.openRequest(this.href, { attach: { name: listName(), count: BASKET.length, csv: listCsv(),
+      ids: BASKET.map(function (x) { return "CS-" + x; }).join("\n") } });
+  });
+  function drawAddAll() {
+    var b = $("addAll"), room = CAP - BASKET.length, inB = {}, fresh = 0, i;
+    BASKET.forEach(function (id) { inB[id] = 1; });
+    for (i = 0; i < hits.length && fresh <= room; i++) if (!inB[hits[i].id]) fresh++;
+    b.hidden = !hits.length || loaded < M.chunks.length || !filtersActive();
+    if (!fresh) { b.disabled = true; b.textContent = "✓ All in request list"; }
+    else if (room <= 0) { b.disabled = true; b.textContent = "Request list is full (" + fmt(CAP) + ")"; }
+    else {
+      b.disabled = false;
+      b.textContent = fresh > room ? "+ Add top " + room + " to request list" :
+        "+ Add " + (fresh === hits.length ? "all " : "") + fmt(fresh) + " to request list";
+    }
+  }
+  $("addAll").onclick = function () {
+    var inB = {}, added = 0, left = 0, i;
+    BASKET.forEach(function (id) { inB[id] = 1; });
+    for (i = 0; i < hits.length && BASKET.length < CAP; i++) if (!inB[hits[i].id]) { BASKET.push(hits[i].id); added++; }
+    for (; i < hits.length; i++) if (!inB[hits[i].id]) left++;
+    saveBasket(); if (openId) render();
+    $("addAllMsg").textContent = "Added " + added + " record" + (added === 1 ? "" : "s") +
+      (left ? " · list is full (" + fmt(CAP) + "), " + fmt(left) + " not added" : "");
+    clearTimeout(aaTimer); aaTimer = setTimeout(function () { $("addAllMsg").textContent = ""; }, 8000);
+  };
   // 申请清单可展开：查看已选记录、单条移除、点 View 打开详情（标题等从已加载的索引里按编号查）
   function drawList() {
     var want = {}, found = {}, done = loaded === M.chunks.length;
     BASKET.forEach(function (id) { want[id] = 1; });
     for (var i = 0; i < ALL.length; i++) if (want[ALL[i].id]) found[ALL[i].id] = ALL[i];
-    $("bk-list").innerHTML = BASKET.map(function (id) {
+    var SHOW = 300;
+    $("bk-note").textContent = BASKET.length > INLINE ? "Over " + INLINE + " records: sent as an attached list (.csv)" : "";
+    $("bk-list").innerHTML = BASKET.slice(0, SHOW).map(function (id) {
       var r = found[id], sub = '<span class="mono">CS-' + esc(id) + "</span>";
       if (r) {
         var cl = r.c ? r.c.split(" ") : [];
@@ -422,7 +474,7 @@
       return '<li data-id="' + esc(id) + '"><div class="bk-t"><span class="tt">' + title + '</span><span class="sub">' + sub + "</span></div>" +
         (r ? '<button type="button" class="bk-ln" data-act="view">View</button>' : "<span></span>") +
         '<button type="button" class="bk-ln bk-rm" data-act="rm" aria-label="Remove CS-' + esc(id) + ' from the request list">Remove</button></li>';
-    }).join("");
+    }).join("") + (BASKET.length > SHOW ? '<li class="bk-more">…and ' + fmt(BASKET.length - SHOW) + " more. The full list is included in the attached file.</li>" : "");
   }
   function showList(on) {
     $("bk-panel").hidden = !on; $("bk-toggle").setAttribute("aria-expanded", on ? "true" : "false");

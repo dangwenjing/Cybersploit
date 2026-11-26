@@ -385,7 +385,9 @@ footer .wrap { display: flex; gap: 24px; flex-wrap: wrap; justify-content: space
 .tchip { font: 500 12.5px var(--sans); color: var(--text-2); background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
 .tchip:hover { color: var(--text); border-color: var(--border-strong); }
 .tchip em { font: normal 500 11px var(--mono); color: var(--muted); margin-left: 4px; }
-.rm-r { display: flex; align-items: center; gap: 14px; }
+.rm-r { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.aa-msg { font-size: 12.5px; color: var(--accent); }
+.aa-msg:empty { display: none; }
 .sortl { display: flex; align-items: center; gap: 8px; color: var(--text-2); font-size: 13px; }
 .sortl select { height: 32px; width: auto; font-size: 13px; padding: 0 10px; }
 .results .rmeta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-bottom: 4px; }
@@ -504,3 +506,10 @@ body.rq-open { overflow: hidden; }
   .rq-box { border-radius: 14px 14px 0 0; max-height: 92vh; padding: 20px 16px; }
   .rq-act .btn { flex: 1 1 calc(50% - 4px); justify-content: center; }
 }
+.rq-att { margin-top: 12px; padding: 12px 14px; border: 1px dashed var(--border-strong); border-radius: 10px; background: var(--surface); }
+.rq-att[hidden] { display: none; }
+.rq-att-t { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 14px; }
+.rq-att-n { color: var(--text-2); word-break: break-all; }
+.rq-att-p { margin: 4px 0 10px; font-size: 13px; color: var(--text-2); }
+.rq-att-a { display: flex; flex-wrap: wrap; gap: 8px; }
+.bk-list li.bk-more { display: block; font-size: 12.5px; color: var(--muted); }

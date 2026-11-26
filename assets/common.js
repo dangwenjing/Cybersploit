@@ -35,7 +35,9 @@ window.CS = {
 // (and visitors in WeChat's in-app browser, where mailto links do nothing) can copy the address
 // and the message and send it from any mailbox, or open Gmail / Outlook.com with it prefilled.
 (function () {
-  var dlg, box, body, ok, cur = {}, lastFocus;
+  var dlg, box, body, ok, cur = {}, att = null, lastFocus;
+  var ZH = "没有邮件客户端？填好内容后点“Copy all”，到QQ邮箱、网易邮箱或学校邮箱新建邮件，粘贴发送即可。";
+  var ZH_ATT = "清单较长，正文里不再逐条列出。请点“Download list”下载清单，发邮件时加为附件；下载不了（比如在微信里打开）就点“Copy IDs”，把编号粘贴进正文。";
   var enc = encodeURIComponent;
 
   function parse(href) {
@@ -58,8 +60,12 @@ window.CS = {
       '<button type="button" class="rq-x" aria-label="Close">×</button>' +
       '<h3 id="rq-t">Send us an email</h3>' +
       '<p class="rq-lead">Fill in the message below, then send it from any mailbox — your mail app, Gmail, Outlook, QQ Mail, 163 Mail or your institutional email.</p>' +
-      '<p class="rq-zh" lang="zh">没有邮件客户端？填好内容后点“Copy all”，到QQ邮箱、网易邮箱或学校邮箱新建邮件，粘贴发送即可。</p>' +
+      '<p class="rq-zh" lang="zh"></p>' +
       row("To", "to", "mono") + row("Subject", "subject") +
+      '<div class="rq-att" hidden><div class="rq-att-t"><b>Attachment</b><span class="rq-att-n mono"></span></div>' +
+      '<p class="rq-att-p">This list is too long to paste into a message. Download it and attach the file to your email.</p>' +
+      '<div class="rq-att-a"><button type="button" class="btn sm primary" data-a="dl">Download list (.csv)</button>' +
+      '<button type="button" class="btn sm" data-a="copy">Copy IDs</button></div></div>' +
       '<div class="rq-mh"><label class="rq-l" for="rq-body">Message</label><button type="button" class="btn sm" data-c="body">Copy</button></div>' +
       '<textarea id="rq-body" class="rq-body" rows="9" spellcheck="false"></textarea>' +
       '<div class="rq-act">' +
@@ -77,6 +83,20 @@ window.CS = {
     $(".rq-x").addEventListener("click", close);
     dlg.addEventListener("click", function (e) { if (e.target === dlg) close(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !dlg.hidden) close(); });
+    $('[data-a="dl"]').addEventListener("click", function () {
+      var url = URL.createObjectURL(new Blob([att.csv], { type: "text/csv;charset=utf-8" }));
+      var l = document.createElement("a");
+      l.href = url; l.download = att.name; box.appendChild(l); l.click(); box.removeChild(l);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      ok.className = "rq-ok";
+      ok.textContent = "Downloaded " + att.name + " — remember to attach it to your email.";
+    });
+    $('[data-a="copy"]').addEventListener("click", function () {
+      copy(att.ids, function (done) {
+        ok.className = "rq-ok" + (done ? "" : " err");
+        ok.textContent = done ? "Copied " + att.count.toLocaleString("en-US") + " record IDs." : "Could not copy automatically.";
+      });
+    });
     box.querySelectorAll("[data-c]").forEach(function (b) {
       b.addEventListener("click", function () {
         var k = b.getAttribute("data-c");
@@ -119,9 +139,14 @@ window.CS = {
     }
   }
 
-  function open(href) {
+  // opts.attach = { name, count, csv, ids }: long lists go into a downloadable CSV instead of the message body
+  function open(href, opts) {
     if (!dlg) build();
     cur = parse(href);
+    att = (opts && opts.attach) || null;
+    $(".rq-att").hidden = !att;
+    $(".rq-zh").textContent = att ? ZH_ATT : ZH;
+    if (att) $(".rq-att-n").textContent = att.name + " · " + att.count.toLocaleString("en-US") + " records";
     $('[data-f="to"]').textContent = cur.to;
     $('[data-f="subject"]').textContent = cur.subject;
     body.value = cur.body;
